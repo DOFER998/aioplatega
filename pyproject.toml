@@ -68,7 +68,7 @@ test = [
     "aresponses>=3.0",
 ]
 docs = [
-    "sphinx>=8.0",
+    "sphinx>=8.0,<9.0",
     "sphinx-autobuild>=2024.10",
     "shibuya>=2025.1",
     "myst-parser>=4.0",
