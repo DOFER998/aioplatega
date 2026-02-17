@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="blue" data-content_root="./">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Getting Started - aioplatega</title><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="API Reference" href="api/index.html" /><link rel="prev" title="aioplatega" href="index.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"light");
+  </script><link rel="stylesheet" type="text/css" href="_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="_static/shibuya.css?v=44020203" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link media="print" rel="stylesheet" type="text/css" href="_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=e8a82921" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="Getting Started"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="index.html">
+      
+      
+      <strong>aioplatega</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link"><a href="#">Getting Started</a></li><li class="link"><a href="api/index.html">API Reference</a></li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/DOFER998/aioplatega" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/client.html">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/types.html">Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/enums.html">Enums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/methods.html">Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/exceptions.html">Exceptions</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#setup">Setup</a></li>
+<li><a class="reference internal" href="#creating-a-transaction">Creating a transaction</a></li>
+<li><a class="reference internal" href="#checking-transaction-status">Checking transaction status</a></li>
+<li><a class="reference internal" href="#getting-exchange-rate">Getting exchange rate</a></li>
+<li><a class="reference internal" href="#getting-conversions">Getting conversions</a></li>
+<li><a class="reference internal" href="#error-handling">Error handling</a></li>
+<li><a class="reference internal" href="#callback-payload">Callback payload</a></li>
+<li><a class="reference internal" href="#command-pattern">Command pattern</a></li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">aioplatega</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Getting Started</strong>
+        <meta itemprop="position" content="2" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <article class="yue dark-code" role="main">
+          <section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h1>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">¶</a></h2>
+<p>Create a <code class="docutils literal notranslate"><span class="pre">Platega</span></code> client with your merchant credentials.
+Credentials are available in your <a class="reference external" href="https://app.platega.io">Platega dashboard</a> under <strong>Settings</strong>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">aioplatega</span><span class="w"> </span><span class="kn">import</span> <span class="n">Platega</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="n">client</span> <span class="o">=</span> <span class="n">Platega</span><span class="p">(</span><span class="n">merchant_id</span><span class="o">=</span><span class="s2">&quot;your-merchant-id&quot;</span><span class="p">,</span> <span class="n">secret</span><span class="o">=</span><span class="s2">&quot;your-secret-key&quot;</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Always use the async context manager to ensure proper cleanup of the connection pool:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">async</span> <span class="k">with</span> <span class="n">Platega</span><span class="p">(</span><span class="n">merchant_id</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="n">secret</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+</span><span data-line="2">    <span class="o">...</span>
+</span></pre></div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="creating-a-transaction">
+<h2>Creating a transaction<a class="headerlink" href="#creating-a-transaction" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">aioplatega</span><span class="w"> </span><span class="kn">import</span> <span class="n">Platega</span><span class="p">,</span> <span class="n">PaymentMethodInt</span><span class="p">,</span> <span class="n">PaymentDetails</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="k">async</span> <span class="k">with</span> <span class="n">Platega</span><span class="p">(</span><span class="n">merchant_id</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="n">secret</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+</span><span data-line="4">    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">create_transaction</span><span class="p">(</span>
+</span><span data-line="5">        <span class="n">payment_method</span><span class="o">=</span><span class="n">PaymentMethodInt</span><span class="o">.</span><span class="n">SBP_QR</span><span class="p">,</span>
+</span><span data-line="6">        <span class="n">payment_details</span><span class="o">=</span><span class="n">PaymentDetails</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="mf">500.0</span><span class="p">,</span> <span class="n">currency</span><span class="o">=</span><span class="s2">&quot;RUB&quot;</span><span class="p">),</span>
+</span><span data-line="7">        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Order #42&quot;</span><span class="p">,</span>
+</span><span data-line="8">        <span class="n">return_url</span><span class="o">=</span><span class="s2">&quot;https://example.com/success&quot;</span><span class="p">,</span>
+</span><span data-line="9">        <span class="n">failed_url</span><span class="o">=</span><span class="s2">&quot;https://example.com/fail&quot;</span><span class="p">,</span>
+</span><span data-line="10">    <span class="p">)</span>
+</span><span data-line="11">
+</span><span data-line="12">    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">transaction_id</span><span class="p">)</span>  <span class="c1"># UUID</span>
+</span><span data-line="13">    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>          <span class="c1"># &quot;PENDING&quot;</span>
+</span><span data-line="14">    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">redirect</span><span class="p">)</span>        <span class="c1"># URL to redirect user to</span>
+</span></pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">transactionId</span></code> is generated by the Platega system automatically — do <strong>not</strong> pass an <code class="docutils literal notranslate"><span class="pre">id</span></code> field in the request.</p>
+</div>
+</section>
+<hr class="docutils" />
+<section id="checking-transaction-status">
+<h2>Checking transaction status<a class="headerlink" href="#checking-transaction-status" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_transaction_status</span><span class="p">(</span><span class="s2">&quot;transaction-uuid&quot;</span><span class="p">)</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>           <span class="c1"># &quot;PENDING&quot; | &quot;CONFIRMED&quot; | &quot;CANCELED&quot; | &quot;CHARGEBACKED&quot;</span>
+</span><span data-line="4"><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">payment_details</span><span class="p">)</span>  <span class="c1"># PaymentDetails or None</span>
+</span></pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="getting-exchange-rate">
+<h2>Getting exchange rate<a class="headerlink" href="#getting-exchange-rate" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">rate</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_rate</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">payment_method</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+</span><span data-line="3">    <span class="n">currency_from</span><span class="o">=</span><span class="s2">&quot;RUB&quot;</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">currency_to</span><span class="o">=</span><span class="s2">&quot;USDT&quot;</span><span class="p">,</span>
+</span><span data-line="5"><span class="p">)</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="nb">print</span><span class="p">(</span><span class="n">rate</span><span class="o">.</span><span class="n">rate</span><span class="p">)</span>         <span class="c1"># float, e.g. 0.0105</span>
+</span><span data-line="8"><span class="nb">print</span><span class="p">(</span><span class="n">rate</span><span class="o">.</span><span class="n">updated_at</span><span class="p">)</span>   <span class="c1"># datetime</span>
+</span></pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="getting-conversions">
+<h2>Getting conversions<a class="headerlink" href="#getting-conversions" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">conversions</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_conversions</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">from_date</span><span class="o">=</span><span class="s2">&quot;2025-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+</span><span data-line="3">    <span class="n">to_date</span><span class="o">=</span><span class="s2">&quot;2025-12-31T23:59:59Z&quot;</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">page</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+</span><span data-line="5">    <span class="n">size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+</span><span data-line="6"><span class="p">)</span>
+</span><span data-line="7">
+</span><span data-line="8"><span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">conversions</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+</span><span data-line="9">    <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">amount</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">currency</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+</span><span data-line="10">
+</span><span data-line="11"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total: </span><span class="si">{</span><span class="n">conversions</span><span class="o">.</span><span class="n">total_elements</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="error-handling">
+<h2>Error handling<a class="headerlink" href="#error-handling" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">aioplatega.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span data-line="2">    <span class="n">PlategaError</span><span class="p">,</span>
+</span><span data-line="3">    <span class="n">PlategaBadRequestError</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">PlategaUnauthorizedError</span><span class="p">,</span>
+</span><span data-line="5">    <span class="n">PlategaNetworkError</span><span class="p">,</span>
+</span><span data-line="6"><span class="p">)</span>
+</span><span data-line="7">
+</span><span data-line="8"><span class="k">try</span><span class="p">:</span>
+</span><span data-line="9">    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">create_transaction</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span><span data-line="10"><span class="k">except</span> <span class="n">PlategaBadRequestError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span data-line="11">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bad request: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">, status=</span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span data-line="12"><span class="k">except</span> <span class="n">PlategaUnauthorizedError</span><span class="p">:</span>
+</span><span data-line="13">    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid credentials&quot;</span><span class="p">)</span>
+</span><span data-line="14"><span class="k">except</span> <span class="n">PlategaNetworkError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span data-line="15">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Network error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span data-line="16"><span class="k">except</span> <span class="n">PlategaError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span data-line="17">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Exception hierarchy</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1">PlategaError
+</span><span data-line="2">├── PlategaAPIError
+</span><span data-line="3">│   ├── PlategaBadRequestError   (400)
+</span><span data-line="4">│   ├── PlategaUnauthorizedError (401)
+</span><span data-line="5">│   ├── PlategaForbiddenError    (403)
+</span><span data-line="6">│   ├── PlategaNotFoundError     (404)
+</span><span data-line="7">│   └── PlategaServerError       (5xx)
+</span><span data-line="8">├── PlategaNetworkError
+</span><span data-line="9">└── ClientDecodeError
+</span></pre></div>
+</div>
+</div>
+</details></section>
+<hr class="docutils" />
+<section id="callback-payload">
+<h2>Callback payload<a class="headerlink" href="#callback-payload" title="Link to this heading">¶</a></h2>
+<p>When Platega sends a webhook to your server, parse the JSON body:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">aioplatega</span><span class="w"> </span><span class="kn">import</span> <span class="n">CallbackPayload</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="n">payload</span> <span class="o">=</span> <span class="n">CallbackPayload</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">request_json</span><span class="p">)</span>
+</span><span data-line="4">
+</span><span data-line="5"><span class="nb">print</span><span class="p">(</span><span class="n">payload</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>              <span class="c1"># transaction UUID</span>
+</span><span data-line="6"><span class="nb">print</span><span class="p">(</span><span class="n">payload</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>          <span class="c1"># &quot;CONFIRMED&quot; | &quot;CANCELED&quot; | &quot;CHARGEBACK&quot;</span>
+</span><span data-line="7"><span class="nb">print</span><span class="p">(</span><span class="n">payload</span><span class="o">.</span><span class="n">amount</span><span class="p">)</span>          <span class="c1"># float</span>
+</span><span data-line="8"><span class="nb">print</span><span class="p">(</span><span class="n">payload</span><span class="o">.</span><span class="n">payment_method</span><span class="p">)</span>  <span class="c1"># int</span>
+</span></pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Callback requirements:</strong></p>
+<ul class="simple">
+<li><p>Your endpoint must respond with HTTP 200 within <strong>60 seconds</strong></p></li>
+<li><p>HTTPS with a valid SSL certificate is <strong>mandatory</strong></p></li>
+<li><p>Up to <strong>3 retries</strong> at 5-minute intervals on failure</p></li>
+<li><p>Configure the URL in dashboard: <strong>Settings → Callback URLs</strong></p></li>
+</ul>
+</div>
+</section>
+<hr class="docutils" />
+<section id="command-pattern">
+<h2>Command pattern<a class="headerlink" href="#command-pattern" title="Link to this heading">¶</a></h2>
+<p>You can also use method objects directly (aiogram-style):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">aioplatega.methods</span><span class="w"> </span><span class="kn">import</span> <span class="n">CreateTransaction</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">aioplatega</span><span class="w"> </span><span class="kn">import</span> <span class="n">PaymentMethodInt</span><span class="p">,</span> <span class="n">PaymentDetails</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="n">method</span> <span class="o">=</span> <span class="n">CreateTransaction</span><span class="p">(</span>
+</span><span data-line="5">    <span class="n">payment_method</span><span class="o">=</span><span class="n">PaymentMethodInt</span><span class="o">.</span><span class="n">CARDS_RUB</span><span class="p">,</span>
+</span><span data-line="6">    <span class="n">payment_details</span><span class="o">=</span><span class="n">PaymentDetails</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="mf">1000.0</span><span class="p">,</span> <span class="n">currency</span><span class="o">=</span><span class="s2">&quot;RUB&quot;</span><span class="p">),</span>
+</span><span data-line="7"><span class="p">)</span>
+</span><span data-line="8">
+</span><span data-line="9"><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="index.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Home</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="api/index.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">API Reference</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2026, c0mrade</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/DOFER998/aioplatega" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a></div>
+    </div>
+  </div>
+</footer>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+      <script src="_static/design-tabs.js?v=f930bc37"></script>
+      <script src="_static/shibuya.js?v=cac61aee"></script>
+      <script src="_static/custom.js?v=7f2eb1b0"></script></body>
+</html>

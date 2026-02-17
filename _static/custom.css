@@ -1,0 +1,12 @@
+html[data-accent-color='blue'] {
+  --accent-9: #4681ff;
+  --accent-a9: #4681ffcf;
+  --accent-a11: #6b9cffeb;
+}
+
+html.light .dark-code .sd-tab-content {
+  --code-block-background: var(--black-a12);
+  --code-block-caption-background: #1c2024;
+  --syntax-text: var(--syntax-dark-text);
+  --syntax-comment: var(--syntax-dark-comment);
+}

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="blue" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Enums - aioplatega</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Methods" href="methods.html" /><link rel="prev" title="Types" href="types.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"light");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=44020203" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e8a82921" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="Enums"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      
+      
+      <strong>aioplatega</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link"><a href="../getting-started.html">Getting Started</a></li><li class="link"><a href="index.html">API Reference</a></li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/DOFER998/aioplatega" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="client.html">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html">Types</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Enums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="methods.html">Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#module-aioplatega.enums.payment_method_int">PaymentMethodInt</a><ul>
+<li><a class="reference internal" href="#aioplatega.enums.payment_method_int.PaymentMethodInt"><code class="docutils literal notranslate"><span class="pre">PaymentMethodInt</span></code></a><ul>
+<li><a class="reference internal" href="#aioplatega.enums.payment_method_int.PaymentMethodInt.SBP_QR"><code class="docutils literal notranslate">SBP_QR</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.enums.payment_method_int.PaymentMethodInt.CARDS_RUB"><code class="docutils literal notranslate">CARDS_RUB</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.enums.payment_method_int.PaymentMethodInt.CARD_ACQUIRING"><code class="docutils literal notranslate">CARD_ACQUIRING</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.enums.payment_method_int.PaymentMethodInt.INTERNATIONAL_ACQUIRING"><code class="docutils literal notranslate">INTERNATIONAL_ACQUIRING</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.enums.payment_method_int.PaymentMethodInt.CRYPTO"><code class="docutils literal notranslate">CRYPTO</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.enums.payment_method_int.PaymentMethodInt.__new__"><code class="docutils literal notranslate">__new__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-aioplatega.enums.payment_status">PaymentStatus</a><ul>
+<li><a class="reference internal" href="#aioplatega.enums.payment_status.PaymentStatus"><code class="docutils literal notranslate"><span class="pre">PaymentStatus</span></code></a><ul>
+<li><a class="reference internal" href="#aioplatega.enums.payment_status.PaymentStatus.PENDING"><code class="docutils literal notranslate">PENDING</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.enums.payment_status.PaymentStatus.CANCELED"><code class="docutils literal notranslate">CANCELED</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.enums.payment_status.PaymentStatus.CONFIRMED"><code class="docutils literal notranslate">CONFIRMED</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.enums.payment_status.PaymentStatus.CHARGEBACKED"><code class="docutils literal notranslate">CHARGEBACKED</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.enums.payment_status.PaymentStatus.__new__"><code class="docutils literal notranslate">__new__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">aioplatega</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">API Reference</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Enums</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <article class="yue dark-code" role="main">
+          <section id="enums">
+<h1>Enums<a class="headerlink" href="#enums" title="Link to this heading">¶</a></h1>
+<section id="module-aioplatega.enums.payment_method_int">
+<span id="paymentmethodint"></span><h2>PaymentMethodInt<a class="headerlink" href="#module-aioplatega.enums.payment_method_int" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aioplatega.enums.payment_method_int.PaymentMethodInt">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aioplatega.enums.payment_method_int.</span></span><span class="sig-name descname"><span class="pre">PaymentMethodInt</span></span><a class="reference internal" href="../_modules/aioplatega/enums/payment_method_int.html#PaymentMethodInt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aioplatega.enums.payment_method_int.PaymentMethodInt" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>Supported payment method identifiers.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.enums.payment_method_int.PaymentMethodInt.SBP_QR">
+<span class="sig-name descname"><span class="pre">SBP_QR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#aioplatega.enums.payment_method_int.PaymentMethodInt.SBP_QR" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.enums.payment_method_int.PaymentMethodInt.CARDS_RUB">
+<span class="sig-name descname"><span class="pre">CARDS_RUB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#aioplatega.enums.payment_method_int.PaymentMethodInt.CARDS_RUB" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.enums.payment_method_int.PaymentMethodInt.CARD_ACQUIRING">
+<span class="sig-name descname"><span class="pre">CARD_ACQUIRING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">11</span></em><a class="headerlink" href="#aioplatega.enums.payment_method_int.PaymentMethodInt.CARD_ACQUIRING" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.enums.payment_method_int.PaymentMethodInt.INTERNATIONAL_ACQUIRING">
+<span class="sig-name descname"><span class="pre">INTERNATIONAL_ACQUIRING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">12</span></em><a class="headerlink" href="#aioplatega.enums.payment_method_int.PaymentMethodInt.INTERNATIONAL_ACQUIRING" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.enums.payment_method_int.PaymentMethodInt.CRYPTO">
+<span class="sig-name descname"><span class="pre">CRYPTO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">13</span></em><a class="headerlink" href="#aioplatega.enums.payment_method_int.PaymentMethodInt.CRYPTO" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aioplatega.enums.payment_method_int.PaymentMethodInt.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioplatega.enums.payment_method_int.PaymentMethodInt.__new__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-aioplatega.enums.payment_status">
+<span id="paymentstatus"></span><h2>PaymentStatus<a class="headerlink" href="#module-aioplatega.enums.payment_status" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aioplatega.enums.payment_status.PaymentStatus">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aioplatega.enums.payment_status.</span></span><span class="sig-name descname"><span class="pre">PaymentStatus</span></span><a class="reference internal" href="../_modules/aioplatega/enums/payment_status.html#PaymentStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aioplatega.enums.payment_status.PaymentStatus" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>Transaction payment status values returned by the Platega API.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.enums.payment_status.PaymentStatus.PENDING">
+<span class="sig-name descname"><span class="pre">PENDING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PENDING'</span></em><a class="headerlink" href="#aioplatega.enums.payment_status.PaymentStatus.PENDING" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.enums.payment_status.PaymentStatus.CANCELED">
+<span class="sig-name descname"><span class="pre">CANCELED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CANCELED'</span></em><a class="headerlink" href="#aioplatega.enums.payment_status.PaymentStatus.CANCELED" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.enums.payment_status.PaymentStatus.CONFIRMED">
+<span class="sig-name descname"><span class="pre">CONFIRMED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CONFIRMED'</span></em><a class="headerlink" href="#aioplatega.enums.payment_status.PaymentStatus.CONFIRMED" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.enums.payment_status.PaymentStatus.CHARGEBACKED">
+<span class="sig-name descname"><span class="pre">CHARGEBACKED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CHARGEBACKED'</span></em><a class="headerlink" href="#aioplatega.enums.payment_status.PaymentStatus.CHARGEBACKED" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aioplatega.enums.payment_status.PaymentStatus.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioplatega.enums.payment_status.PaymentStatus.__new__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="types.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Types</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="methods.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Methods</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2026, c0mrade</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/DOFER998/aioplatega" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../_static/shibuya.js?v=cac61aee"></script>
+      <script src="../_static/custom.js?v=7f2eb1b0"></script></body>
+</html>

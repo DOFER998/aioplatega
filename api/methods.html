@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="blue" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Methods - aioplatega</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Exceptions" href="exceptions.html" /><link rel="prev" title="Enums" href="enums.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"light");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=44020203" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e8a82921" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="Methods"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      
+      
+      <strong>aioplatega</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link"><a href="../getting-started.html">Getting Started</a></li><li class="link"><a href="index.html">API Reference</a></li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/DOFER998/aioplatega" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="client.html">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html">Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enums.html">Enums</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#plategamethod">PlategaMethod</a><ul>
+<li><a class="reference internal" href="#aioplatega.methods.base.PlategaMethod"><code class="docutils literal notranslate"><span class="pre">PlategaMethod</span></code></a><ul>
+<li><a class="reference internal" href="#aioplatega.methods.base.PlategaMethod.model_config"><code class="docutils literal notranslate">model_config</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#createtransaction">CreateTransaction</a><ul>
+<li><a class="reference internal" href="#aioplatega.methods.create_transaction.CreateTransaction"><code class="docutils literal notranslate"><span class="pre">CreateTransaction</span></code></a><ul>
+<li><a class="reference internal" href="#aioplatega.methods.create_transaction.CreateTransaction.payment_method"><code class="docutils literal notranslate">payment_method</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.methods.create_transaction.CreateTransaction.payment_details"><code class="docutils literal notranslate">payment_details</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.methods.create_transaction.CreateTransaction.description"><code class="docutils literal notranslate">description</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.methods.create_transaction.CreateTransaction.return_url"><code class="docutils literal notranslate">return_url</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.methods.create_transaction.CreateTransaction.failed_url"><code class="docutils literal notranslate">failed_url</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.methods.create_transaction.CreateTransaction.payload"><code class="docutils literal notranslate">payload</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.methods.create_transaction.CreateTransaction.model_config"><code class="docutils literal notranslate">model_config</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gettransactionstatus">GetTransactionStatus</a><ul>
+<li><a class="reference internal" href="#aioplatega.methods.get_transaction_status.GetTransactionStatus"><code class="docutils literal notranslate"><span class="pre">GetTransactionStatus</span></code></a><ul>
+<li><a class="reference internal" href="#aioplatega.methods.get_transaction_status.GetTransactionStatus.transaction_id"><code class="docutils literal notranslate">transaction_id</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.methods.get_transaction_status.GetTransactionStatus.model_config"><code class="docutils literal notranslate">model_config</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#getrate">GetRate</a><ul>
+<li><a class="reference internal" href="#aioplatega.methods.get_rate.GetRate"><code class="docutils literal notranslate"><span class="pre">GetRate</span></code></a><ul>
+<li><a class="reference internal" href="#aioplatega.methods.get_rate.GetRate.merchant_id"><code class="docutils literal notranslate">merchant_id</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.methods.get_rate.GetRate.payment_method"><code class="docutils literal notranslate">payment_method</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.methods.get_rate.GetRate.currency_from"><code class="docutils literal notranslate">currency_from</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.methods.get_rate.GetRate.currency_to"><code class="docutils literal notranslate">currency_to</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.methods.get_rate.GetRate.model_config"><code class="docutils literal notranslate">model_config</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#getconversions">GetConversions</a><ul>
+<li><a class="reference internal" href="#aioplatega.methods.get_conversions.GetConversions"><code class="docutils literal notranslate"><span class="pre">GetConversions</span></code></a><ul>
+<li><a class="reference internal" href="#aioplatega.methods.get_conversions.GetConversions.from_date"><code class="docutils literal notranslate">from_date</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.methods.get_conversions.GetConversions.to_date"><code class="docutils literal notranslate">to_date</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.methods.get_conversions.GetConversions.page"><code class="docutils literal notranslate">page</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.methods.get_conversions.GetConversions.size"><code class="docutils literal notranslate">size</span></code></a></li>
+<li><a class="reference internal" href="#aioplatega.methods.get_conversions.GetConversions.model_config"><code class="docutils literal notranslate">model_config</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">aioplatega</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">API Reference</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Methods</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <article class="yue dark-code" role="main">
+          <section id="methods">
+<h1>Methods<a class="headerlink" href="#methods" title="Link to this heading">¶</a></h1>
+<p>Command-pattern objects representing API endpoints (aiogram-style).</p>
+<section id="plategamethod">
+<h2>PlategaMethod<a class="headerlink" href="#plategamethod" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aioplatega.methods.base.PlategaMethod">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aioplatega.methods.base.</span></span><span class="sig-name descname"><span class="pre">PlategaMethod</span></span><a class="reference internal" href="../_modules/aioplatega/methods/base.html#PlategaMethod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aioplatega.methods.base.PlategaMethod" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="types.html#aioplatega.types.base.PlategaObject" title="aioplatega.types.base.PlategaObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">PlategaObject</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">PlategaType</span></code>]</p>
+<p>Base class for all Platega API methods (command pattern).</p>
+<dl class="simple">
+<dt>Subclasses must specify:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">__api_method__</span></code>: URL path (may contain <code class="docutils literal notranslate"><span class="pre">{field_name}</span></code> placeholders).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__http_method__</span></code>: <code class="docutils literal notranslate"><span class="pre">&quot;GET&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;POST&quot;</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__returning__</span></code>: response model class.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.base.PlategaMethod.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'arbitrary_types_allowed':</span> <span class="pre">True,</span> <span class="pre">'defer_build':</span> <span class="pre">True,</span> <span class="pre">'extra':</span> <span class="pre">'allow',</span> <span class="pre">'frozen':</span> <span class="pre">True,</span> <span class="pre">'populate_by_name':</span> <span class="pre">True,</span> <span class="pre">'use_enum_values':</span> <span class="pre">True,</span> <span class="pre">'validate_assignment':</span> <span class="pre">True,</span> <span class="pre">'validate_by_alias':</span> <span class="pre">True,</span> <span class="pre">'validate_by_name':</span> <span class="pre">True}</span></em><a class="headerlink" href="#aioplatega.methods.base.PlategaMethod.model_config" title="Link to this definition">¶</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="createtransaction">
+<h2>CreateTransaction<a class="headerlink" href="#createtransaction" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aioplatega.methods.create_transaction.CreateTransaction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aioplatega.methods.create_transaction.</span></span><span class="sig-name descname"><span class="pre">CreateTransaction</span></span><a class="reference internal" href="../_modules/aioplatega/methods/create_transaction.html#CreateTransaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aioplatega.methods.create_transaction.CreateTransaction" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PlategaMethod[CreateTransactionResponse]</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.create_transaction.CreateTransaction.payment_method">
+<span class="sig-name descname"><span class="pre">payment_method</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="enums.html#aioplatega.enums.payment_method_int.PaymentMethodInt" title="aioplatega.enums.payment_method_int.PaymentMethodInt"><code class="xref py py-class docutils literal notranslate"><span class="pre">PaymentMethodInt</span></code></a></em><a class="headerlink" href="#aioplatega.methods.create_transaction.CreateTransaction.payment_method" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.create_transaction.CreateTransaction.payment_details">
+<span class="sig-name descname"><span class="pre">payment_details</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="types.html#aioplatega.types.payment_details.PaymentDetails" title="aioplatega.types.payment_details.PaymentDetails"><code class="xref py py-class docutils literal notranslate"><span class="pre">PaymentDetails</span></code></a></em><a class="headerlink" href="#aioplatega.methods.create_transaction.CreateTransaction.payment_details" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.create_transaction.CreateTransaction.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#aioplatega.methods.create_transaction.CreateTransaction.description" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.create_transaction.CreateTransaction.return_url">
+<span class="sig-name descname"><span class="pre">return_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#aioplatega.methods.create_transaction.CreateTransaction.return_url" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.create_transaction.CreateTransaction.failed_url">
+<span class="sig-name descname"><span class="pre">failed_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#aioplatega.methods.create_transaction.CreateTransaction.failed_url" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.create_transaction.CreateTransaction.payload">
+<span class="sig-name descname"><span class="pre">payload</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#aioplatega.methods.create_transaction.CreateTransaction.payload" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.create_transaction.CreateTransaction.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'arbitrary_types_allowed':</span> <span class="pre">True,</span> <span class="pre">'defer_build':</span> <span class="pre">True,</span> <span class="pre">'extra':</span> <span class="pre">'allow',</span> <span class="pre">'frozen':</span> <span class="pre">True,</span> <span class="pre">'populate_by_name':</span> <span class="pre">True,</span> <span class="pre">'use_enum_values':</span> <span class="pre">True,</span> <span class="pre">'validate_assignment':</span> <span class="pre">True,</span> <span class="pre">'validate_by_alias':</span> <span class="pre">True,</span> <span class="pre">'validate_by_name':</span> <span class="pre">True}</span></em><a class="headerlink" href="#aioplatega.methods.create_transaction.CreateTransaction.model_config" title="Link to this definition">¶</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="gettransactionstatus">
+<h2>GetTransactionStatus<a class="headerlink" href="#gettransactionstatus" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aioplatega.methods.get_transaction_status.GetTransactionStatus">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aioplatega.methods.get_transaction_status.</span></span><span class="sig-name descname"><span class="pre">GetTransactionStatus</span></span><a class="reference internal" href="../_modules/aioplatega/methods/get_transaction_status.html#GetTransactionStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aioplatega.methods.get_transaction_status.GetTransactionStatus" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PlategaMethod[TransactionStatusResponse]</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.get_transaction_status.GetTransactionStatus.transaction_id">
+<span class="sig-name descname"><span class="pre">transaction_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></em><a class="headerlink" href="#aioplatega.methods.get_transaction_status.GetTransactionStatus.transaction_id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.get_transaction_status.GetTransactionStatus.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'arbitrary_types_allowed':</span> <span class="pre">True,</span> <span class="pre">'defer_build':</span> <span class="pre">True,</span> <span class="pre">'extra':</span> <span class="pre">'allow',</span> <span class="pre">'frozen':</span> <span class="pre">True,</span> <span class="pre">'populate_by_name':</span> <span class="pre">True,</span> <span class="pre">'use_enum_values':</span> <span class="pre">True,</span> <span class="pre">'validate_assignment':</span> <span class="pre">True,</span> <span class="pre">'validate_by_alias':</span> <span class="pre">True,</span> <span class="pre">'validate_by_name':</span> <span class="pre">True}</span></em><a class="headerlink" href="#aioplatega.methods.get_transaction_status.GetTransactionStatus.model_config" title="Link to this definition">¶</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="getrate">
+<h2>GetRate<a class="headerlink" href="#getrate" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aioplatega.methods.get_rate.GetRate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aioplatega.methods.get_rate.</span></span><span class="sig-name descname"><span class="pre">GetRate</span></span><a class="reference internal" href="../_modules/aioplatega/methods/get_rate.html#GetRate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aioplatega.methods.get_rate.GetRate" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PlategaMethod[RateResponse]</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.get_rate.GetRate.merchant_id">
+<span class="sig-name descname"><span class="pre">merchant_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><a class="headerlink" href="#aioplatega.methods.get_rate.GetRate.merchant_id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.get_rate.GetRate.payment_method">
+<span class="sig-name descname"><span class="pre">payment_method</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></em><a class="headerlink" href="#aioplatega.methods.get_rate.GetRate.payment_method" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.get_rate.GetRate.currency_from">
+<span class="sig-name descname"><span class="pre">currency_from</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><a class="headerlink" href="#aioplatega.methods.get_rate.GetRate.currency_from" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.get_rate.GetRate.currency_to">
+<span class="sig-name descname"><span class="pre">currency_to</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><a class="headerlink" href="#aioplatega.methods.get_rate.GetRate.currency_to" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.get_rate.GetRate.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'arbitrary_types_allowed':</span> <span class="pre">True,</span> <span class="pre">'defer_build':</span> <span class="pre">True,</span> <span class="pre">'extra':</span> <span class="pre">'allow',</span> <span class="pre">'frozen':</span> <span class="pre">True,</span> <span class="pre">'populate_by_name':</span> <span class="pre">True,</span> <span class="pre">'use_enum_values':</span> <span class="pre">True,</span> <span class="pre">'validate_assignment':</span> <span class="pre">True,</span> <span class="pre">'validate_by_alias':</span> <span class="pre">True,</span> <span class="pre">'validate_by_name':</span> <span class="pre">True}</span></em><a class="headerlink" href="#aioplatega.methods.get_rate.GetRate.model_config" title="Link to this definition">¶</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="getconversions">
+<h2>GetConversions<a class="headerlink" href="#getconversions" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aioplatega.methods.get_conversions.GetConversions">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aioplatega.methods.get_conversions.</span></span><span class="sig-name descname"><span class="pre">GetConversions</span></span><a class="reference internal" href="../_modules/aioplatega/methods/get_conversions.html#GetConversions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aioplatega.methods.get_conversions.GetConversions" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PlategaMethod[ConversionsResponse]</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.get_conversions.GetConversions.from_date">
+<span class="sig-name descname"><span class="pre">from_date</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#aioplatega.methods.get_conversions.GetConversions.from_date" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.get_conversions.GetConversions.to_date">
+<span class="sig-name descname"><span class="pre">to_date</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#aioplatega.methods.get_conversions.GetConversions.to_date" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.get_conversions.GetConversions.page">
+<span class="sig-name descname"><span class="pre">page</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></em><a class="headerlink" href="#aioplatega.methods.get_conversions.GetConversions.page" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.get_conversions.GetConversions.size">
+<span class="sig-name descname"><span class="pre">size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></em><a class="headerlink" href="#aioplatega.methods.get_conversions.GetConversions.size" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioplatega.methods.get_conversions.GetConversions.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'arbitrary_types_allowed':</span> <span class="pre">True,</span> <span class="pre">'defer_build':</span> <span class="pre">True,</span> <span class="pre">'extra':</span> <span class="pre">'allow',</span> <span class="pre">'frozen':</span> <span class="pre">True,</span> <span class="pre">'populate_by_name':</span> <span class="pre">True,</span> <span class="pre">'use_enum_values':</span> <span class="pre">True,</span> <span class="pre">'validate_assignment':</span> <span class="pre">True,</span> <span class="pre">'validate_by_alias':</span> <span class="pre">True,</span> <span class="pre">'validate_by_name':</span> <span class="pre">True}</span></em><a class="headerlink" href="#aioplatega.methods.get_conversions.GetConversions.model_config" title="Link to this definition">¶</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="enums.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Enums</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="exceptions.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Exceptions</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2026, c0mrade</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/DOFER998/aioplatega" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../_static/shibuya.js?v=cac61aee"></script>
+      <script src="../_static/custom.js?v=7f2eb1b0"></script></body>
+</html>
