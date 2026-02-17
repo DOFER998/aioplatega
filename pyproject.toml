@@ -1,0 +1,182 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "aioplatega"
+description = "Modern and fully asynchronous SDK for the Platega payment API"
+readme = "README.rst"
+requires-python = ">=3.10,<3.15"
+license = "MIT"
+authors = [
+    { name = "c0mrade", email = "killmy666@gmail.com" },
+]
+maintainers = [
+    { name = "c0mrade", email = "killmy666@gmail.com" },
+]
+keywords = [
+    "platega",
+    "payment",
+    "api",
+    "sdk",
+    "asyncio",
+    "aiohttp",
+]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Framework :: AsyncIO",
+    "Typing :: Typed",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "aiohttp>=3.9.0",
+    "certifi>=2024.0.0",
+    "pydantic>=2.12.5",
+]
+dynamic = ["version"]
+
+[tool.hatch.version]
+path = "aioplatega/__meta__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["aioplatega"]
+
+[project.urls]
+Repository = "https://github.com/DOFER998/aioplatega"
+Issues = "https://github.com/DOFER998/aioplatega/issues"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.0",
+    "mypy>=1.10",
+    "pre-commit>=4.0",
+]
+test = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "pytest-mock>=3.14",
+    "pytest-cov>=6.0",
+    "aresponses>=3.0",
+]
+docs = [
+    "sphinx>=8.0",
+    "sphinx-autobuild>=2024.10",
+    "shibuya>=2025.1",
+    "myst-parser>=4.0",
+    "sphinx-design>=0.6",
+    "sphinx-copybutton>=0.5",
+    "sphinx-autodoc-typehints>=2.0",
+]
+
+[tool.ruff]
+line-length = 99
+target-version = "py310"
+src = ["aioplatega", "tests"]
+exclude = [
+    ".git",
+    "build",
+    "dist",
+    "venv",
+    ".venv",
+    "docs",
+    "*.egg-info",
+]
+
+[tool.ruff.lint]
+select = [
+    "A", "B", "C4", "DTZ", "E", "F", "I",
+    "PERF", "PL", "Q", "RET", "SIM", "T10", "T20", "UP",
+]
+ignore = [
+    "A002", "A005", "B008", "PLC0415", "PLR0913", "PLR6301",
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["aioplatega"]
+
+[tool.ruff.lint.per-file-ignores]
+"aioplatega/types/*" = ["E501", "UP045"]
+"aioplatega/methods/*" = ["E501", "UP045"]
+"scripts/**" = ["T20", "PLR2004"]
+"tests/**" = [
+    "PLR0124",
+    "PLR2004",
+    "DTZ001",
+    "DTZ005",
+    "DTZ006",
+    "A001",
+    "A004",
+    "B018",
+    "E501",
+    "UP",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.mypy]
+plugins = ["pydantic.mypy"]
+python_version = "3.10"
+show_error_codes = true
+show_error_context = true
+show_column_numbers = true
+pretty = true
+ignore_missing_imports = false
+warn_return_any = true
+warn_unused_configs = true
+disallow_subclassing_any = true
+disallow_any_generics = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+follow_imports_for_stubs = true
+namespace_packages = true
+show_absolute_path = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+disallow_untyped_decorators = false
+
+[[tool.mypy.overrides]]
+module = "aresponses.*"
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+filterwarnings = [
+    "error",
+    "ignore::pytest.PytestUnraisableExceptionWarning",
+]
+
+[tool.coverage.run]
+branch = false
+parallel = true
+omit = ["aioplatega/__meta__.py"]
+
+[tool.coverage.report]
+fail_under = 80
+exclude_lines = [
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "pragma: no cover",
+    "@abstractmethod",
+    "@overload",
+]
