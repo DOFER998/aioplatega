@@ -1,0 +1,44 @@
+name: Release
+
+# release-please keeps a Release PR open against main, accumulating the
+# conventional-commit messages since the last tag. Merging that PR is the
+# release: it bumps the version in pyproject.toml, writes CHANGELOG.md, tags,
+# and creates the GitHub release. Only then does anything reach PyPI.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-please
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    name: Maintain the release PR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      released: ${{ steps.release.outputs.release_created }}
+      tag: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  publish:
+    name: Publish
+    needs: release-please
+    if: needs.release-please.outputs.released == 'true'
+    uses: ./.github/workflows/publish.yml
+    with:
+      tag: ${{ needs.release-please.outputs.tag }}
+    permissions:
+      contents: write
+      id-token: write

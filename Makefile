@@ -65,17 +65,13 @@ test-coverage-view:
 build: clean
 	uv build
 
-.PHONY: bump
-bump:
-	uv version --bump $(args)
-
-# Normally you want the Release workflow instead (Actions -> Release -> Run),
-# which bumps, runs the gate, tags, publishes and drafts the notes in one go.
-# This target is the manual fallback; pushing the tag triggers publish.yml.
+# Releases are cut by release-please: merge the Release PR it keeps open
+# against main and the tag, changelog and PyPI upload follow from that. This
+# target only exists for a release made outside that flow.
 .PHONY: release
 release:
 	git add pyproject.toml uv.lock
-	git commit -m "Release $(shell uv version --short)"
+	git commit -m "chore: release $(shell uv version --short)"
 	git tag -a v$(shell uv version --short) -m "Release $(shell uv version --short)"
 
 # =================================================================================================

@@ -1,14 +1,13 @@
 name: Publish
 
 # Two ways in:
-#   * a tag pushed by hand (`git tag v1.2.3 && git push --tags`)
-#   * called by release.yml, which bumps and tags for you
+#   * called by release-please.yml once a Release PR is merged
+#   * a tag pushed by hand, for the rare release made outside that flow
 #
-# The second path exists because a tag pushed with GITHUB_TOKEN does not
-# trigger workflows — GitHub suppresses that to avoid recursion — so an
-# automated release has to invoke this workflow directly instead of relying
-# on its own tag push to set it off. A called workflow sees the *caller's*
-# ref, not the tag, which is why the tag is passed in explicitly.
+# The first path exists because a tag pushed with GITHUB_TOKEN does not
+# trigger workflows — GitHub suppresses that to avoid recursion — so the
+# release job has to invoke this workflow directly. A called workflow sees
+# the *caller's* ref, not the tag, which is why the tag is passed in.
 on:
   push:
     tags: ["v*"]
@@ -87,8 +86,8 @@ jobs:
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
 
-  github-release:
-    name: Create GitHub release
+  attach-artifacts:
+    name: Attach distributions to the release
     needs: publish
     runs-on: ubuntu-latest
     permissions:
@@ -100,10 +99,11 @@ jobs:
           name: dist
           path: dist/
 
-      - name: Create release
+      # release-please writes the release and its notes from the commit
+      # messages; this only adds the built files to it. `generate_release_notes`
+      # would overwrite that changelog with GitHub's own list of PRs.
+      - name: Attach files
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ inputs.tag || github.ref_name }}
-          name: ${{ inputs.tag || github.ref_name }}
-          generate_release_notes: true
           files: dist/*

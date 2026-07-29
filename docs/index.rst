@@ -76,6 +76,15 @@ Quick example
    asyncio.run(main())
 
 
+Releases
+--------
+
+Versions are cut by `release-please
+<https://github.com/googleapis/release-please>`_, which keeps a Release PR
+open against ``main`` collecting the conventional-commit messages since the
+last tag. Merging it bumps the version, writes ``CHANGELOG.md``, tags, and
+publishes to PyPI. Pushing code publishes nothing.
+
 Specification sources
 ---------------------
 
