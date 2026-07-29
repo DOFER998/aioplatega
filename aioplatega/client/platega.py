@@ -123,6 +123,7 @@ class Platega:
         return_url: str | None = None,
         failed_url: str | None = None,
         payload: str | None = None,
+        metadata: dict[str, Any] | PaymentMetadata | None = None,
     ) -> CreateTransactionResponse:
         """Create a new payment transaction.
 
@@ -157,6 +158,7 @@ class Platega:
                 return_url=return_url,
                 failed_url=failed_url,
                 payload=payload,
+                metadata=metadata,
             )
         return await self(method)
 
