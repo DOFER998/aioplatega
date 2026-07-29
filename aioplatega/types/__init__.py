@@ -11,6 +11,7 @@ from .create_transaction_request import CreateTransactionRequest
 from .create_transaction_response import CreateTransactionResponse
 from .export_url_response import ExportUrlResponse
 from .h2h_qr_response import H2HQrResponse
+from .pagination import Pagination
 from .payment_details import PaymentDetails
 from .payment_link_response import PaymentLinkResponse
 from .payment_metadata import PaymentMetadata
@@ -42,6 +43,7 @@ __all__ = [
     "CreateTransactionResponse",
     "ExportUrlResponse",
     "H2HQrResponse",
+    "Pagination",
     "PaymentDetails",
     "PaymentLinkResponse",
     "PaymentMetadata",

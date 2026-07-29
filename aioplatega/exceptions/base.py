@@ -8,7 +8,12 @@ class PlategaError(Exception):
 
 
 class PlategaAPIError(PlategaError):
-    """Error returned by the Platega API."""
+    """Error returned by the Platega API.
+
+    The API answers failures with an envelope carrying more than a message.
+    ``trace_id`` in particular is what Platega support asks for when
+    investigating a request.
+    """
 
     def __init__(
         self,
@@ -16,18 +21,44 @@ class PlategaAPIError(PlategaError):
         method: str | None = None,
         status_code: int | None = None,
         body: Any = None,
+        *,
+        code: str | None = None,
+        trace_id: str | None = None,
+        errors: list[Any] | None = None,
     ) -> None:
+        """Build the error.
+
+        Args:
+            message: Human-readable message from the response.
+            method: API path the request was sent to.
+            status_code: HTTP status code.
+            body: Decoded response body, kept whole.
+            code: Vendor error code, e.g. ``"Common:VAL_0001"``.
+            trace_id: Request identifier to quote to support.
+            errors: Per-field failures, each ``{"key": ..., "message": ...}``.
+        """
         self.message = message
         self.method = method
         self.status_code = status_code
         self.body = body
+        self.code = code
+        self.trace_id = trace_id
+        self.errors = errors or []
         super().__init__(message)
 
     def __repr__(self) -> str:
-        return (
-            f"{type(self).__name__}(message={self.message!r}, "
-            f"method={self.method!r}, status_code={self.status_code!r})"
-        )
+        parts = [
+            f"message={self.message!r}",
+            f"method={self.method!r}",
+            f"status_code={self.status_code!r}",
+        ]
+        if self.code:
+            parts.append(f"code={self.code!r}")
+        if self.trace_id:
+            parts.append(f"trace_id={self.trace_id!r}")
+        if self.errors:
+            parts.append(f"errors={self.errors!r}")
+        return f"{type(self).__name__}({', '.join(parts)})"
 
 
 class PlategaBadRequestError(PlategaAPIError):

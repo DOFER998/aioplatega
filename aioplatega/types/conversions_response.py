@@ -1,37 +1,32 @@
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from pydantic import Field
 
 from .base import PlategaObject
 from .conversion_item import ConversionItem
+from .pagination import Pagination
 
 
 class ConversionsResponse(PlategaObject):
-    """A page of balance-unlock operations."""
+    """A page of balance-unlock operations.
 
-    content: list[ConversionItem] = Field(default_factory=list)
-    total_elements: int = Field(0, alias="totalElements")
-    total_pages: int = Field(0, alias="totalPages")
-    page: int = 0
-    size: int = 0
+    Iterating the response yields the operations directly.
 
-    if TYPE_CHECKING:
+    Note:
+        The API answers with ``operations`` and ``pagination``. Earlier
+        releases modelled ``content``/``totalElements``, which no live
+        response has ever contained, so the operations were silently dropped
+        and the list always came back empty.
+    """
 
-        def __init__(
-            __pydantic__self__,
-            *,
-            content: list[ConversionItem] = ...,  # type: ignore[assignment]
-            total_elements: int = 0,
-            total_pages: int = 0,
-            page: int = 0,
-            size: int = 0,
-            **__pydantic_kwargs: Any,
-        ) -> None:
-            super().__init__(
-                content=content,
-                total_elements=total_elements,
-                total_pages=total_pages,
-                page=page,
-                size=size,
-                **__pydantic_kwargs,
-            )
+    operations: list[ConversionItem] = Field(default_factory=list)
+    pagination: Pagination | None = None
+
+    def __iter__(self) -> Any:
+        return iter(self.operations)
+
+    def __getitem__(self, index: int) -> ConversionItem:
+        return self.operations[index]
+
+    def __len__(self) -> int:
+        return len(self.operations)

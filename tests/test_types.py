@@ -186,53 +186,61 @@ class TestRateResponse:
 
 
 class TestConversionItem:
+    """Shape confirmed against the live API; see tests/test_live_shapes.py."""
+
     def test_construction(self):
-        dt = datetime(2025, 1, 15, 12, 0, 0)
         item = ConversionItem(
-            id=1,
-            amount=100.0,
-            currency="RUB",
-            status="completed",
-            created_at=dt,
+            id="9cd8debd-89e8-470d-b57a-fd35bc8f0352",
+            source_amount=5300.0,
+            source_currency="RUB",
+            target_currency="USDT",
         )
-        assert item.id == 1
-        assert item.amount == 100.0
+        assert item.id == "9cd8debd-89e8-470d-b57a-fd35bc8f0352"
+        assert item.source_amount == 5300.0
 
     def test_alias_dump(self):
-        item = ConversionItem(id=1, amount=50.0)
-        data = item.model_dump(by_alias=True)
+        item = ConversionItem.model_validate(
+            {
+                "exchangeRate": 83.895,
+                "operationDate": "2026-07-29T14:25:00.988453Z",
+                "targetAmount": 63.17,
+                "createdAt": "2026-07-29T14:25:00.988448Z",
+            }
+        )
+        assert item.exchange_rate == 83.895
+        assert item.operation_date == "2026-07-29T14:25:00.988453Z"
+        assert item.target_amount == 63.17
+        data = item.model_dump(by_alias=True, exclude_none=True)
+        assert "exchangeRate" in data
         assert "createdAt" in data
 
 
 class TestConversionsResponse:
+    """Shape confirmed against the live API; see tests/test_live_shapes.py."""
+
     def test_empty(self):
         resp = ConversionsResponse()
-        assert resp.content == []
-        assert resp.total_elements == 0
-        assert resp.total_pages == 0
-        assert resp.page == 0
-        assert resp.size == 0
+        assert resp.operations == []
+        assert resp.pagination is None
 
     def test_with_items(self):
-        items = [
-            ConversionItem(id=1, amount=100.0),
-            ConversionItem(id=2, amount=200.0),
-        ]
-        resp = ConversionsResponse(
-            content=items,
-            total_elements=2,
-            total_pages=1,
-            page=0,
-            size=20,
+        resp = ConversionsResponse.model_validate(
+            {
+                "operations": [{"id": "op-1", "sourceCurrency": "RUB", "targetCurrency": "USDT"}],
+                "pagination": {"page": 0, "size": 20, "total": 1},
+            }
         )
-        assert len(resp.content) == 2
-        assert resp.total_elements == 2
+        assert len(resp) == 1
+        assert resp[0].source_currency == "RUB"
+        assert resp.pagination is not None
+        assert resp.pagination.total == 1
 
     def test_alias_dump(self):
-        resp = ConversionsResponse()
-        data = resp.model_dump(by_alias=True)
-        assert "totalElements" in data
-        assert "totalPages" in data
+        resp = ConversionsResponse.model_validate(
+            {"operations": [{"exchangeRate": 83.9, "processedTransactionsCount": 11}]}
+        )
+        assert resp.operations[0].exchange_rate == 83.9
+        assert resp.operations[0].processed_transactions_count == 11
 
 
 class TestBaseModelConfig:

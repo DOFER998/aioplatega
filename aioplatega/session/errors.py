@@ -56,7 +56,9 @@ def raise_for_status(status: int, body: Any, method: str) -> None:
 
     Args:
         status: HTTP status code.
-        body: Decoded response body, read for a ``message`` field.
+        body: Decoded response body. The API wraps failures in an envelope of
+            ``message``, ``code``, ``data`` and ``traceId``; each is lifted
+            onto the exception where present.
         method: API path, recorded on the exception for context.
 
     Raises:
@@ -65,10 +67,14 @@ def raise_for_status(status: int, body: Any, method: str) -> None:
     """
     if status < HTTP_CLIENT_ERROR:
         return
-    message = body.get("message", "") if isinstance(body, dict) else str(body)
+    envelope = body if isinstance(body, dict) else {}
+    errors = envelope.get("data")
     raise exception_for_status(status)(
-        message=message,
+        message=envelope.get("message", "") if envelope else str(body),
         method=method,
         status_code=status,
         body=body,
+        code=envelope.get("code"),
+        trace_id=envelope.get("traceId"),
+        errors=errors if isinstance(errors, list) else None,
     )
