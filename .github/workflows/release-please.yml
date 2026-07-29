@@ -32,6 +32,11 @@ jobs:
           config-file: .github/release-please-config.json
           manifest-file: .github/.release-please-manifest.json
 
+  # PyPI matches its trusted publisher against the workflow that *entered*
+  # the run, not the one that does the upload. Because pypi-release.yml is
+  # called from here, the OIDC claim reads release-please.yml, so that is the
+  # filename the trusted publisher on PyPI has to name. A publisher for
+  # pypi-release.yml alone covers only a tag pushed by hand.
   publish:
     name: Publish
     needs: release-please
