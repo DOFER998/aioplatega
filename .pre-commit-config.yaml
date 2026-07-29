@@ -14,9 +14,9 @@ repos:
       - id: check-json
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.0
+    rev: v0.16.0
     hooks:
-      - id: ruff
-        files: &files '^(aioplatega|tests)'
+      - id: ruff-check
+        files: &files '^(aioplatega|tests|scripts)'
       - id: ruff-format
         files: *files

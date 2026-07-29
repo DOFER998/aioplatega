@@ -1,0 +1,109 @@
+name: Publish
+
+# Two ways in:
+#   * a tag pushed by hand (`git tag v1.2.3 && git push --tags`)
+#   * called by release.yml, which bumps and tags for you
+#
+# The second path exists because a tag pushed with GITHUB_TOKEN does not
+# trigger workflows — GitHub suppresses that to avoid recursion — so an
+# automated release has to invoke this workflow directly instead of relying
+# on its own tag push to set it off. A called workflow sees the *caller's*
+# ref, not the tag, which is why the tag is passed in explicitly.
+on:
+  push:
+    tags: ["v*"]
+  workflow_call:
+    inputs:
+      tag:
+        description: Tag to publish, e.g. v1.2.3
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  TAG: ${{ inputs.tag || github.ref_name }}
+
+jobs:
+  build:
+    name: Build distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.ref_name }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v9
+        with:
+          enable-cache: true
+          python-version: "3.12"
+
+      # Catches the case where the tag was moved or created off the wrong
+      # commit; publishing a mislabelled version to PyPI cannot be undone.
+      - name: Verify the tag matches the packaged version
+        run: |
+          set -euo pipefail
+          packaged=$(python3 -c "import re,pathlib; print(re.search(r'\"(.+?)\"', pathlib.Path('aioplatega/__meta__.py').read_text()).group(1))")
+          expected="${TAG#v}"
+          if [ "$packaged" != "$expected" ]; then
+            echo "::error::tag $TAG does not match __version__ $packaged"
+            exit 1
+          fi
+
+      - name: Build
+        run: uv build
+
+      # A broken sdist or a README that PyPI refuses to render otherwise only
+      # surfaces at upload time, once the tag already exists.
+      - name: Check metadata
+        run: uvx twine check --strict dist/*
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/aioplatega
+    permissions:
+      # Trusted publishing: PyPI verifies this workflow's OIDC identity, so
+      # there is no long-lived API token to store or rotate.
+      id-token: write
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+  github-release:
+    name: Create GitHub release
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+
+      - name: Create release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ inputs.tag || github.ref_name }}
+          name: ${{ inputs.tag || github.ref_name }}
+          generate_release_notes: true
+          files: dist/*

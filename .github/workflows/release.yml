@@ -1,0 +1,106 @@
+name: Release
+
+# One-button release: pick a bump, and this bumps __version__, runs the full
+# gate, commits, tags, and hands off to publish.yml.
+#
+# Guarded by the `pypi` environment on the publish side, so the upload still
+# waits for whatever reviewers that environment requires.
+on:
+  workflow_dispatch:
+    inputs:
+      part:
+        description: Which part to bump
+        required: true
+        default: patch
+        type: choice
+        options: [patch, minor, major]
+      dry-run:
+        description: Run the gate and show the new version without pushing
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: Bump and tag
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      tag: ${{ steps.bump.outputs.tag }}
+      version: ${{ steps.bump.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v9
+        with:
+          enable-cache: true
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: uv sync --locked --group dev --group test
+
+      # Releasing from a red tree is the one thing this workflow must never
+      # do, so the whole gate runs before the version is touched.
+      - name: Ruff check
+        run: uv run ruff check aioplatega/ tests/ scripts/
+
+      - name: Ruff format check
+        run: uv run ruff format --check aioplatega/ tests/ scripts/
+
+      - name: Mypy
+        run: uv run mypy aioplatega/ tests/ scripts/
+
+      - name: Tests
+        run: uv run pytest --cov=aioplatega --cov-report=term-missing
+
+      - name: Bump version
+        id: bump
+        run: |
+          set -euo pipefail
+          uv run python scripts/bump_version.py "${{ inputs.part }}"
+          version=$(python3 -c "import re,pathlib; print(re.search(r'\"(.+?)\"', pathlib.Path('aioplatega/__meta__.py').read_text()).group(1))")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
+          echo "### Release v$version" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Refuse to reuse an existing tag
+        run: |
+          set -euo pipefail
+          if git rev-parse "refs/tags/${{ steps.bump.outputs.tag }}" >/dev/null 2>&1; then
+            echo "::error::tag ${{ steps.bump.outputs.tag }} already exists"
+            exit 1
+          fi
+
+      - name: Commit, tag and push
+        if: ${{ !inputs.dry-run }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add aioplatega/__meta__.py
+          git commit -m "Release ${{ steps.bump.outputs.version }}"
+          git tag -a "${{ steps.bump.outputs.tag }}" -m "Release ${{ steps.bump.outputs.version }}"
+          git push origin HEAD:"${GITHUB_REF_NAME}"
+          git push origin "${{ steps.bump.outputs.tag }}"
+
+  publish:
+    name: Publish
+    needs: prepare
+    if: ${{ !inputs.dry-run }}
+    uses: ./.github/workflows/publish.yml
+    with:
+      tag: ${{ needs.prepare.outputs.tag }}
+    permissions:
+      contents: write
+      id-token: write

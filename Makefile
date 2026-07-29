@@ -70,11 +70,15 @@ build: clean
 bump:
 	uv run python scripts/bump_version.py $(args)
 
+# Normally you want the Release workflow instead (Actions -> Release -> Run),
+# which bumps, runs the gate, tags, publishes and drafts the notes in one go.
+# This target is the manual fallback; pushing the tag triggers publish.yml.
 .PHONY: release
 release:
-	git add .
+	git add aioplatega/__meta__.py
 	git commit -m "Release $(shell uv run python -c 'from aioplatega import __version__; print(__version__)')"
-	git tag v$(shell uv run python -c 'from aioplatega import __version__; print(__version__)')
+	git tag -a v$(shell uv run python -c 'from aioplatega import __version__; print(__version__)') \
+		-m "Release $(shell uv run python -c 'from aioplatega import __version__; print(__version__)')"
 
 # =================================================================================================
 # Documentation

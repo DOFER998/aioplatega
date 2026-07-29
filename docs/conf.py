@@ -47,7 +47,13 @@ autodoc_default_options = {
 autodoc_typehints = "description"
 autodoc_class_signature = "separated"
 
-suppress_warnings = ["autodoc"]
+suppress_warnings = [
+    "autodoc",
+    # sphinx-autodoc-typehints cannot resolve pydantic's internal `JsonValue`
+    # forward reference when it walks Field(). Third-party noise, and it would
+    # otherwise fail the -W build for every model module.
+    "sphinx_autodoc_typehints.forward_reference",
+]
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
