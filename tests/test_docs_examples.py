@@ -21,7 +21,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 SOURCES = [
     *sorted((ROOT / "docs").rglob("*.md")),
     *sorted((ROOT / "docs").rglob("*.rst")),
-    ROOT / "README.rst",
+    ROOT / "README.md",
 ]
 
 # Attribute names that belong to Python, a web framework or a docstring's
