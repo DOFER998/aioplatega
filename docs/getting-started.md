@@ -110,17 +110,26 @@ print(rate.updated_at)   # datetime
 
 ```python
 conversions = await client.get_conversions(
-    from_date="2025-01-01T00:00:00Z",
-    to_date="2025-12-31T23:59:59Z",
+    from_date="2026-01-01T00:00:00Z",
+    to_date="2026-12-31T23:59:59Z",
     page=0,
     size=50,
 )
 
-for item in conversions.content:
-    print(item.id, item.amount, item.currency, item.status)
+for op in conversions:
+    print(op.source_amount, op.source_currency, "->", op.target_amount, op.target_currency)
+    print(op.exchange_rate, op.operation_date, op.processed_transactions_count)
 
-print(f"Total: {conversions.total_elements}")
+if conversions.pagination:
+    print(f"Total: {conversions.pagination.total}")
 ```
+
+:::{note}
+The response is iterable over its operations. Earlier releases exposed
+`content` and `total_elements`, which no live response has ever contained —
+the call silently returned an empty list. It reads `operations` and
+`pagination` now.
+:::
 
 ---
 

@@ -2,6 +2,9 @@ name: Publish
 
 # Two ways in:
 #   * called by release-please.yml once a Release PR is merged
+#
+# The filename is load-bearing: PyPI trusted publishing pins the workflow by
+# name, so renaming this file invalidates the publisher configuration.
 #   * a tag pushed by hand, for the rare release made outside that flow
 #
 # The first path exists because a tag pushed with GITHUB_TOKEN does not
