@@ -32,9 +32,9 @@ install: clean
 
 .PHONY: lint
 lint:
-	uv run ruff format --check --diff $(package_dir)
-	uv run ruff check --show-fixes $(package_dir)
-	uv run mypy $(package_dir)
+	uv run ruff format --check --diff $(code_dir)
+	uv run ruff check --show-fixes $(code_dir)
+	uv run mypy $(code_dir)
 
 .PHONY: reformat
 reformat:

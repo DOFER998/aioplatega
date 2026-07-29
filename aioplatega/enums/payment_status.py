@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class PaymentStatus(str, Enum):
+class PaymentStatus(StrEnum):
     """Transaction payment status values returned by the Platega API."""
 
     PENDING = "PENDING"

@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 from uuid import UUID
 
 from pydantic import Field
@@ -9,46 +9,46 @@ from .payment_details import PaymentDetails
 
 
 class TransactionStatusResponse(PlategaObject):
-    id: Optional[UUID] = None
-    status: Optional[PaymentStatus] = None
-    payment_details: Optional[PaymentDetails] = Field(None, alias="paymentDetails")
-    merchant_name: Optional[str] = Field(None, alias="merchantName")
-    merchant_id: Optional[UUID] = Field(None, alias="merchantId")
-    commission: Optional[float] = Field(None, alias="comission")
-    payment_method: Optional[str] = Field(None, alias="paymentMethod")
-    expires_in: Optional[str] = Field(None, alias="expiresIn")
-    return_url: Optional[str] = Field(None, alias="return")
-    commission_usdt: Optional[float] = Field(None, alias="comissionUsdt")
-    amount_usdt: Optional[float] = Field(None, alias="amountUsdt")
-    qr: Optional[str] = None
-    pay_form_success_url: Optional[str] = Field(None, alias="payformSuccessUrl")
-    payload: Optional[str] = None
-    commission_type: Optional[int] = Field(None, alias="comissionType")
-    external_id: Optional[str] = Field(None, alias="externalId")
-    description: Optional[str] = None
+    id: UUID | None = None
+    status: PaymentStatus | None = None
+    payment_details: PaymentDetails | None = Field(None, alias="paymentDetails")
+    merchant_name: str | None = Field(None, alias="merchantName")
+    merchant_id: UUID | None = Field(None, alias="merchantId")
+    commission: float | None = Field(None, alias="comission")
+    payment_method: str | None = Field(None, alias="paymentMethod")
+    expires_in: str | None = Field(None, alias="expiresIn")
+    return_url: str | None = Field(None, alias="return")
+    commission_usdt: float | None = Field(None, alias="comissionUsdt")
+    amount_usdt: float | None = Field(None, alias="amountUsdt")
+    qr: str | None = None
+    pay_form_success_url: str | None = Field(None, alias="payformSuccessUrl")
+    payload: str | None = None
+    commission_type: int | None = Field(None, alias="comissionType")
+    external_id: str | None = Field(None, alias="externalId")
+    description: str | None = None
 
     if TYPE_CHECKING:
 
         def __init__(
             __pydantic__self__,
             *,
-            id: Optional[UUID] = None,
-            status: Optional[PaymentStatus] = None,
-            payment_details: Optional[PaymentDetails] = None,
-            merchant_name: Optional[str] = None,
-            merchant_id: Optional[UUID] = None,
-            commission: Optional[float] = None,
-            payment_method: Optional[str] = None,
-            expires_in: Optional[str] = None,
-            return_url: Optional[str] = None,
-            commission_usdt: Optional[float] = None,
-            amount_usdt: Optional[float] = None,
-            qr: Optional[str] = None,
-            pay_form_success_url: Optional[str] = None,
-            payload: Optional[str] = None,
-            commission_type: Optional[int] = None,
-            external_id: Optional[str] = None,
-            description: Optional[str] = None,
+            id: UUID | None = None,
+            status: PaymentStatus | None = None,
+            payment_details: PaymentDetails | None = None,
+            merchant_name: str | None = None,
+            merchant_id: UUID | None = None,
+            commission: float | None = None,
+            payment_method: str | None = None,
+            expires_in: str | None = None,
+            return_url: str | None = None,
+            commission_usdt: float | None = None,
+            amount_usdt: float | None = None,
+            qr: str | None = None,
+            pay_form_success_url: str | None = None,
+            payload: str | None = None,
+            commission_type: int | None = None,
+            external_id: str | None = None,
+            description: str | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(

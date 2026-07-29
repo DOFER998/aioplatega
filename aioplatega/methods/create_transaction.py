@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, ClassVar, Optional
+from typing import TYPE_CHECKING, Any, ClassVar
 
 from pydantic import Field
 
@@ -15,10 +15,10 @@ class CreateTransaction(PlategaMethod[CreateTransactionResponse]):
 
     payment_method: PaymentMethodInt = Field(alias="paymentMethod")
     payment_details: PaymentDetails = Field(alias="paymentDetails")
-    description: Optional[str] = None
-    return_url: Optional[str] = Field(None, alias="return")
-    failed_url: Optional[str] = Field(None, alias="failedUrl")
-    payload: Optional[str] = None
+    description: str | None = None
+    return_url: str | None = Field(None, alias="return")
+    failed_url: str | None = Field(None, alias="failedUrl")
+    payload: str | None = None
 
     if TYPE_CHECKING:
 
@@ -27,10 +27,10 @@ class CreateTransaction(PlategaMethod[CreateTransactionResponse]):
             *,
             payment_method: PaymentMethodInt,
             payment_details: PaymentDetails,
-            description: Optional[str] = None,
-            return_url: Optional[str] = None,
-            failed_url: Optional[str] = None,
-            payload: Optional[str] = None,
+            description: str | None = None,
+            return_url: str | None = None,
+            failed_url: str | None = None,
+            payload: str | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(

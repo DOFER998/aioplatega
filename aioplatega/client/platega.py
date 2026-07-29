@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import TypeVar
-
 from aioplatega.enums import PaymentMethodInt
 from aioplatega.methods import (
     CreateTransaction,
@@ -19,8 +17,6 @@ from aioplatega.types import (
     RateResponse,
     TransactionStatusResponse,
 )
-
-T = TypeVar("T")
 
 
 class Platega:
@@ -57,7 +53,7 @@ class Platega:
             self._owns_session = True
         return self._session
 
-    async def __call__(self, method: PlategaMethod[T]) -> T:
+    async def __call__[T](self, method: PlategaMethod[T]) -> T:
         """Dispatch a method object (aiogram-style command pattern)."""
         session = self._get_session()
         return await session.make_request(  # type: ignore[no-any-return]

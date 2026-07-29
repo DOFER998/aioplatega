@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 from uuid import UUID
 
 from pydantic import Field
@@ -12,7 +12,7 @@ class CallbackPayload(PlategaObject):
     currency: str
     status: str
     payment_method: int = Field(alias="paymentMethod")
-    payload: Optional[str] = None
+    payload: str | None = None
 
     if TYPE_CHECKING:
 
@@ -24,7 +24,7 @@ class CallbackPayload(PlategaObject):
             currency: str,
             status: str,
             payment_method: int,
-            payload: Optional[str] = None,
+            payload: str | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(

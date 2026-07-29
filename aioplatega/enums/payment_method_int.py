@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class PaymentMethodInt(int, Enum):
+class PaymentMethodInt(IntEnum):
     """Supported payment method identifiers."""
 
     SBP_QR = 2

@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 from uuid import UUID
 
 from pydantic import Field
@@ -9,30 +9,30 @@ from .payment_details import PaymentDetails
 
 
 class CreateTransactionResponse(PlategaObject):
-    payment_method: Optional[str] = Field(None, alias="paymentMethod")
+    payment_method: str | None = Field(None, alias="paymentMethod")
     transaction_id: UUID = Field(alias="transactionId")
-    redirect: Optional[str] = None
-    return_url: Optional[str] = Field(None, alias="return")
-    payment_details: Optional[str | PaymentDetails] = Field(None, alias="paymentDetails")
+    redirect: str | None = None
+    return_url: str | None = Field(None, alias="return")
+    payment_details: str | PaymentDetails | None = Field(None, alias="paymentDetails")
     status: PaymentStatus
-    expires_in: Optional[str] = Field(None, alias="expiresIn")
-    merchant_id: Optional[UUID] = Field(None, alias="merchantId")
-    usdt_rate: Optional[float] = Field(None, alias="usdtRate")
+    expires_in: str | None = Field(None, alias="expiresIn")
+    merchant_id: UUID | None = Field(None, alias="merchantId")
+    usdt_rate: float | None = Field(None, alias="usdtRate")
 
     if TYPE_CHECKING:
 
         def __init__(
             __pydantic__self__,
             *,
-            payment_method: Optional[str] = None,
+            payment_method: str | None = None,
             transaction_id: UUID,
-            redirect: Optional[str] = None,
-            return_url: Optional[str] = None,
-            payment_details: Optional[str | PaymentDetails] = None,
+            redirect: str | None = None,
+            return_url: str | None = None,
+            payment_details: str | PaymentDetails | None = None,
             status: PaymentStatus,
-            expires_in: Optional[str] = None,
-            merchant_id: Optional[UUID] = None,
-            usdt_rate: Optional[float] = None,
+            expires_in: str | None = None,
+            merchant_id: UUID | None = None,
+            usdt_rate: float | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
