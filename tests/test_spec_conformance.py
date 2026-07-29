@@ -138,3 +138,70 @@ class TestPaymentMethodIsNotAClosedSet:
             payment_details=PaymentDetails(amount=1000.0, currency="RUB"),
         )
         assert built.payment_method == 7
+
+
+class TestCallbackStatusIsOpen:
+    """The callback schema names two statuses; the same page's prose adds a third."""
+
+    @pytest.mark.parametrize("status", ["CONFIRMED", "CANCELED", "CHARGEBACKED"])
+    def test_documented_callback_statuses_parse(self, status):
+        from aioplatega.types import CallbackPayload
+
+        parsed = CallbackPayload.model_validate(
+            {
+                "id": TID,
+                "amount": 100.0,
+                "currency": "RUB",
+                "status": status,
+                "paymentMethod": 2,
+            }
+        )
+        assert parsed.status == status
+
+    def test_callback_without_payload_field_parses(self):
+        """The schema omits `payload`; only the endpoint page lists it."""
+        from aioplatega.types import CallbackPayload
+
+        parsed = CallbackPayload.model_validate(
+            {
+                "id": TID,
+                "amount": 100.0,
+                "currency": "RUB",
+                "status": "CONFIRMED",
+                "paymentMethod": 2,
+            }
+        )
+        assert parsed.payload is None
+
+
+class TestMetadataIsDocumented:
+    """metadata.userId is an operational requirement, not a nicety."""
+
+    def test_metadata_reaches_the_request_body(self):
+        from aioplatega.methods import CreateTransaction
+        from aioplatega.types import PaymentDetails
+
+        built = CreateTransaction(
+            payment_method=PaymentMethodInt.SBP_QR,
+            payment_details=PaymentDetails(amount=500.0, currency="RUB"),
+            metadata={"userId": "u-1"},
+        )
+        assert built.model_dump(by_alias=True, exclude_none=True)["metadata"] == {"userId": "u-1"}
+
+    def test_payment_link_carries_metadata_too(self):
+        from aioplatega.methods import CreatePaymentLink
+        from aioplatega.types import PaymentDetails
+
+        built = CreatePaymentLink(
+            payment_details=PaymentDetails(amount=500.0, currency="RUB"),
+            metadata={"userId": "u-1"},
+        )
+        assert built.model_dump(by_alias=True, exclude_none=True)["metadata"] == {"userId": "u-1"}
+
+    def test_requirement_is_stated_where_callers_will_see_it(self):
+        from aioplatega import Platega
+        from aioplatega.types import CreateTransactionRequest
+
+        assert "userId" in (CreateTransactionRequest.__doc__ or "")
+        assert "userId" in (Platega.create_transaction.__doc__ or "")
+        assert "userId" in (Platega.create_payment_link.__doc__ or "")

@@ -13,6 +13,11 @@ class CreateTransactionRequest(PlategaObject):
     Note:
         Do not supply an ``id``. The API generates the transaction id.
 
+        ``metadata`` carries the payer identifier. Shops in certain categories
+        are required to send ``metadata.userId``; where that requirement
+        applies, omitting it disables antifraud protection and can get the
+        shop suspended. Ask your Platega manager whether it applies to yours.
+
         ``payment_method`` accepts any integer, not only a
         :class:`~aioplatega.enums.PaymentMethodInt` member. The enum names the
         documented methods, but the GitBook records that ids 1 through 9 are

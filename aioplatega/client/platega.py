@@ -131,12 +131,19 @@ class Platega:
             return_url: URL to redirect the user after successful payment.
             failed_url: URL to redirect the user after failed payment.
             payload: Arbitrary string passed through to the callback.
+            metadata: Extra data required for some merchant categories.
 
         Returns:
             Response containing the transaction ID, status, and redirect URL.
 
         Raises:
             PlategaValidationError: If the arguments are not a valid request.
+
+        Note:
+        ``metadata`` carries the payer identifier. Shops in certain categories
+        are required to send ``metadata.userId``; where that requirement
+        applies, omitting it disables antifraud protection and can get the
+        shop suspended. Ask your Platega manager whether it applies to yours.
         """
         with _validated():
             method = CreateTransaction(
@@ -264,6 +271,12 @@ class Platega:
 
         Raises:
             PlategaValidationError: If the arguments are not a valid request.
+
+        Note:
+        ``metadata`` carries the payer identifier. Shops in certain categories
+        are required to send ``metadata.userId``; where that requirement
+        applies, omitting it disables antifraud protection and can get the
+        shop suspended. Ask your Platega manager whether it applies to yours.
         """
         with _validated():
             method = CreatePaymentLink(

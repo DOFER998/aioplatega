@@ -12,6 +12,12 @@ class CreatePaymentLink(PlategaMethod[PaymentLinkResponse]):
 
     Unlike :class:`~aioplatega.methods.CreateTransaction`, no payment method is
     fixed up front; the payer picks one on the hosted page.
+
+    Note:
+        ``metadata`` carries the payer identifier. Shops in certain categories
+        are required to send ``metadata.userId``; where that requirement
+        applies, omitting it disables antifraud protection and can get the
+        shop suspended. Ask your Platega manager whether it applies to yours.
     """
 
     __api_method__: ClassVar[str] = "/v2/transaction/process"

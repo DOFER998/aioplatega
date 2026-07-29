@@ -10,7 +10,16 @@ class CallbackPayload(PlategaObject):
     """Body of the transaction-status callback.
 
     Delivered to the callback URL configured in the dashboard, with the
-    ``X-MerchantId`` and ``X-Secret`` headers for verification.
+    ``X-MerchantId`` and ``X-Secret`` headers for verification. Platega
+    expects a response within 60 seconds and retries up to three times at
+    five-minute intervals.
+
+    Note:
+        ``status`` is typed as a plain string rather than
+        :class:`~aioplatega.enums.PaymentStatus`. The published schema lists
+        only ``CONFIRMED`` and ``CANCELED``, while the same page's prose adds
+        ``CHARGEBACKED`` for refunds, so the field has to admit values the
+        schema does not name.
     """
 
     id: UUID
