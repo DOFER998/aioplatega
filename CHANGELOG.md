@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1](https://github.com/DOFER998/aioplatega/compare/v0.2.0...v0.2.1) (2026-07-29)
+
+
+### Bug Fixes
+
+* keep uv.lock in step with the released version ([d6cc2c7](https://github.com/DOFER998/aioplatega/commit/d6cc2c7f1d0730c179cd472478e50dfe00cf5cbb))
+* publish from the entry workflow, not a reusable one ([3f1586e](https://github.com/DOFER998/aioplatega/commit/3f1586e578a1bc4f85a9d2f11962c96f51d3c5a5))
+
 ## [0.2.0](https://github.com/DOFER998/aioplatega/compare/v0.1.0...v0.2.0) (2026-07-29)
 
 
