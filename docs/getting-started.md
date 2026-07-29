@@ -60,11 +60,11 @@ print(result.payment_details)  # PaymentDetails or None
 
 ## Getting exchange rate
 
-:::{warning}
-`get_rate()` calls `/rates/payment_method_rate`, which does not appear anywhere
-in the [published API documentation](https://docs.platega.io). It is kept
-because removing it would break existing callers, but treat it as legacy — it
-may be withdrawn without notice.
+:::{note}
+`get_rate()` calls `/rates/payment_method_rate`, which is documented in the
+[older GitBook](https://platega-io.gitbook.io/platega.io-api-dokumentaciya/poluchenie-kursov) but is absent from the
+[current API reference](https://docs.platega.io). It is live; treat the
+omission as a sign that it may be withdrawn without notice.
 :::
 
 ```python

@@ -36,12 +36,14 @@ class TestPaymentStatus:
         assert PaymentStatus.CANCELED == "CANCELED"
         assert PaymentStatus.CONFIRMED == "CONFIRMED"
         assert PaymentStatus.CHARGEBACKED == "CHARGEBACKED"
+        assert PaymentStatus.EXPIRED == "EXPIRED"
+        assert PaymentStatus.FAILED == "FAILED"
 
     def test_is_str(self):
         assert isinstance(PaymentStatus.PENDING, str)
 
     def test_member_count(self):
-        assert len(PaymentStatus) == 4
+        assert len(PaymentStatus) == 6
 
     def test_from_value(self):
         assert PaymentStatus("CONFIRMED") is PaymentStatus.CONFIRMED

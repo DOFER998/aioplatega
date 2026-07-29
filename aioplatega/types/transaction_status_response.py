@@ -22,7 +22,7 @@ class TransactionStatusResponse(PlategaObject):
     """
 
     id: UUID | None = None
-    status: PaymentStatus | None = None
+    status: PaymentStatus | str | None = None
     payment_details: PaymentDetails | None = Field(None, alias="paymentDetails")
     merchant_name: str | None = Field(None, alias="merchantName")
     merchant_id: UUID | None = Field(
@@ -47,7 +47,7 @@ class TransactionStatusResponse(PlategaObject):
             __pydantic__self__,
             *,
             id: UUID | None = None,
-            status: PaymentStatus | None = None,
+            status: PaymentStatus | str | None = None,
             payment_details: PaymentDetails | None = None,
             merchant_name: str | None = None,
             merchant_id: UUID | None = None,

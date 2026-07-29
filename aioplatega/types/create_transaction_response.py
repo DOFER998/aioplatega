@@ -16,7 +16,7 @@ class CreateTransactionResponse(PlategaObject):
     redirect: str | None = None
     return_url: str | None = Field(None, alias="return")
     payment_details: str | PaymentDetails | None = Field(None, alias="paymentDetails")
-    status: PaymentStatus
+    status: PaymentStatus | str
     expires_in: str | None = Field(None, alias="expiresIn")
     merchant_id: UUID | None = Field(None, alias="merchantId")
     usdt_rate: float | None = Field(None, alias="usdtRate")
@@ -31,7 +31,7 @@ class CreateTransactionResponse(PlategaObject):
             redirect: str | None = None,
             return_url: str | None = None,
             payment_details: str | PaymentDetails | None = None,
-            status: PaymentStatus,
+            status: PaymentStatus | str,
             expires_in: str | None = None,
             merchant_id: UUID | None = None,
             usdt_rate: float | None = None,

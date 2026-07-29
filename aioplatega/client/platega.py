@@ -188,11 +188,11 @@ class Platega:
         Raises:
             PlategaValidationError: If the arguments are not a valid request.
 
-        Warning:
-            This endpoint does not appear anywhere in the published API
-            documentation at https://docs.platega.io. It is kept because
-            removing it would break existing callers, but treat it as legacy:
-            it may be withdrawn without notice.
+        Note:
+            Documented in the older GitBook rather than at
+            https://docs.platega.io, which does not list this endpoint at all.
+            It is live, but treat the omission as a sign that it may be
+            withdrawn without notice.
         """
         with _validated():
             method = GetRate(

@@ -4,8 +4,12 @@ from enum import IntEnum
 class PaymentMethodInt(IntEnum):
     """Supported payment method identifiers.
 
-    Values follow the ``PaymentMethodInt`` schema published at
-    https://docs.platega.io — with the exception of :attr:`CARDS_RUB`.
+    Note:
+        Drawn from both published specifications. The Apidog schema at
+        https://docs.platega.io lists 2, 3, 11, 12 and 13; the older GitBook
+        additionally names 10. Its table also notes that methods 1 through 9
+        are P2P, which is why the subscription endpoint takes a method id
+        that is not a member here.
     """
 
     SBP_QR = 2
@@ -15,10 +19,9 @@ class PaymentMethodInt(IntEnum):
     """ERIP (Belarusian payment system)."""
 
     CARDS_RUB = 10
-    """Deprecated: absent from the published API documentation.
+    """Card payments in RUB, 3-D Secure, MIR cards.
 
-    Kept so that existing callers keep importing, but the API is not
-    documented as accepting ``10``. Prefer :attr:`CARD_ACQUIRING`.
+    Named in the GitBook table but absent from the Apidog enum.
     """
 
     CARD_ACQUIRING = 11
