@@ -288,8 +288,14 @@ result = await client(method)
 ## Recurring SBP subscriptions
 
 ```python
+from aioplatega import SubscriptionInterval, SubscriptionPaymentDetails
+
 sub = await client.create_subscription(
-    payment_details=PaymentDetails(amount=100.0, currency="RUB"),
+    payment_details=SubscriptionPaymentDetails(
+        amount=500,
+        currency="RUB",
+        interval=SubscriptionInterval.MONTH,
+    ),
     description="Premium подписка",
 )
 print(sub.redirect)        # send the payer here to confirm the mandate
@@ -308,9 +314,15 @@ await client.cancel_subscription(sub.transaction_id)
 ```
 
 :::{note}
-`status` and `interval_unit` are typed `str | int` because the API returns
-them as numbers in the list response and as words in the single-subscription
-response.
+Subscriptions take `SubscriptionPaymentDetails`, not `PaymentDetails`: the
+charge period is part of the payment details and is **required**. `amount` is
+an integer here, matching the subscription schema.
+:::
+
+:::{note}
+On the way back, `status` and `interval_unit` are typed `str | int` because
+the API returns them as numbers in the list response and as words in the
+single-subscription response.
 :::
 
 ---

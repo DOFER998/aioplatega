@@ -46,6 +46,7 @@ from aioplatega.types import (
     RateResponse,
     Subscription,
     SubscriptionListResponse,
+    SubscriptionPaymentDetails,
     TransactionExportResponse,
     TransactionStatusResponse,
 )
@@ -480,13 +481,15 @@ class Platega:
     async def create_subscription(
         self,
         *,
-        payment_details: PaymentDetails,
+        payment_details: SubscriptionPaymentDetails,
         description: str | None = None,
     ) -> CreateSubscriptionResponse:
         """Create a recurring SBP subscription.
 
         Args:
-            payment_details: Amount and currency charged on each cycle.
+            payment_details: Amount, currency and charge period. The period is
+                required — see
+                :class:`~aioplatega.types.SubscriptionPaymentDetails`.
             description: Shown to the payer on the payment form and in the
                 email sent after each charge.
 

@@ -205,3 +205,62 @@ class TestMetadataIsDocumented:
         assert "userId" in (CreateTransactionRequest.__doc__ or "")
         assert "userId" in (Platega.create_transaction.__doc__ or "")
         assert "userId" in (Platega.create_payment_link.__doc__ or "")
+
+
+class TestSubscriptionInterval:
+    """The mapping is documented, nested inside paymentDetails on create."""
+
+    @pytest.mark.parametrize(
+        ("value", "name"),
+        [("1", "DAY"), ("2", "WEEK"), ("3", "MONTH"), ("4", "YEAR")],
+    )
+    def test_documented_mapping(self, value, name):
+        from aioplatega.enums import SubscriptionInterval
+
+        assert SubscriptionInterval(value).name == name
+
+
+class TestSubscriptionPaymentDetails:
+    """`interval` is required on the subscription create body, not optional."""
+
+    def test_interval_is_required(self):
+        from pydantic import ValidationError
+
+        from aioplatega.types import SubscriptionPaymentDetails
+
+        with pytest.raises(ValidationError):
+            SubscriptionPaymentDetails(amount=500, currency="RUB")
+
+    def test_body_matches_the_documented_example(self):
+        from aioplatega.enums import SubscriptionInterval
+        from aioplatega.methods import CreateSubscription
+        from aioplatega.types import SubscriptionPaymentDetails
+
+        built = CreateSubscription(
+            payment_details=SubscriptionPaymentDetails(
+                amount=500,
+                currency="RUB",
+                interval=SubscriptionInterval.MONTH,
+            ),
+            description="Premium подписка",
+        )
+        assert built.model_dump(mode="json", by_alias=True, exclude_none=True) == {
+            "paymentMethod": 6,
+            "paymentDetails": {"amount": 500, "currency": "RUB", "interval": "3"},
+            "description": "Premium подписка",
+        }
+
+    async def test_client_sends_the_interval(self, client, mock_session):
+        from aioplatega.enums import SubscriptionInterval
+        from aioplatega.types import SubscriptionPaymentDetails
+
+        await client.create_subscription(
+            payment_details=SubscriptionPaymentDetails(
+                amount=100,
+                currency="RUB",
+                interval=SubscriptionInterval.WEEK,
+            ),
+            description="Weekly",
+        )
+        (_, _, method) = mock_session.calls[0]
+        assert method.payment_details.interval == "2"

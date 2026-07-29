@@ -6,6 +6,7 @@ that binding rather than the HTTP layer, which is covered elsewhere.
 
 import pytest
 
+from aioplatega.enums import SubscriptionInterval
 from aioplatega.methods import (
     CancelSubscription,
     CancelTransaction,
@@ -20,11 +21,14 @@ from aioplatega.methods import (
     GetSubscription,
     ListSubscriptions,
 )
-from aioplatega.types import PaymentDetails
+from aioplatega.types import PaymentDetails, SubscriptionPaymentDetails
 
 TID = "12345678-1234-5678-1234-567812345678"
 SID = "11111111-1111-1111-1111-111111111111"
 DETAILS = PaymentDetails(amount=100.0, currency="RUB")
+SUB_DETAILS = SubscriptionPaymentDetails(
+    amount=100, currency="RUB", interval=SubscriptionInterval.MONTH
+)
 
 
 @pytest.mark.parametrize(
@@ -38,7 +42,7 @@ DETAILS = PaymentDetails(amount=100.0, currency="RUB")
         (lambda c: c.export_transactions_csv(), ExportTransactionsCsv),
         (lambda c: c.export_transactions_excel(), ExportTransactionsExcel),
         (lambda c: c.export_transactions_json(), ExportTransactionsJson),
-        (lambda c: c.create_subscription(payment_details=DETAILS), CreateSubscription),
+        (lambda c: c.create_subscription(payment_details=SUB_DETAILS), CreateSubscription),
         (lambda c: c.get_subscription(SID), GetSubscription),
         (lambda c: c.list_subscriptions(), ListSubscriptions),
         (lambda c: c.cancel_subscription(SID), CancelSubscription),
@@ -70,7 +74,7 @@ class TestArgumentsReachTheMethod:
         assert method.size == 50
 
     async def test_subscription_description_is_forwarded(self, client, mock_session):
-        await client.create_subscription(payment_details=DETAILS, description="Premium")
+        await client.create_subscription(payment_details=SUB_DETAILS, description="Premium")
         (_, _, method) = mock_session.calls[0]
         assert method.description == "Premium"
 

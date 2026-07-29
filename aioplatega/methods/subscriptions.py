@@ -8,9 +8,9 @@ from pydantic import Field
 from aioplatega.types import (
     CancelSubscriptionResponse,
     CreateSubscriptionResponse,
-    PaymentDetails,
     Subscription,
     SubscriptionListResponse,
+    SubscriptionPaymentDetails,
 )
 
 from .base import PlategaMethod
@@ -28,6 +28,11 @@ class CreateSubscription(PlategaMethod[CreateSubscriptionResponse]):
     """POST ``/transaction/process`` with the subscription payment method.
 
     The ``transaction_id`` in the response is the subscription id.
+
+    Note:
+        Takes :class:`~aioplatega.types.SubscriptionPaymentDetails` rather
+        than :class:`~aioplatega.types.PaymentDetails`: the charge period is
+        part of the payment details here, and is required.
     """
 
     __api_method__: ClassVar[str] = "/transaction/process"
@@ -35,7 +40,7 @@ class CreateSubscription(PlategaMethod[CreateSubscriptionResponse]):
     __returning__: ClassVar[type] = CreateSubscriptionResponse
 
     payment_method: int = Field(SUBSCRIPTION_PAYMENT_METHOD, alias="paymentMethod")
-    payment_details: PaymentDetails = Field(alias="paymentDetails")
+    payment_details: SubscriptionPaymentDetails = Field(alias="paymentDetails")
     description: str | None = None
 
 

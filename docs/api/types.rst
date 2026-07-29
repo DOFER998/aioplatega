@@ -135,6 +135,13 @@ Subscription
    :members:
    :show-inheritance:
 
+SubscriptionPaymentDetails
+--------------------------
+
+.. automodule:: aioplatega.types.subscription_payment_details
+   :members:
+   :show-inheritance:
+
 SubscriptionListResponse
 ------------------------
 

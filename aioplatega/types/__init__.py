@@ -19,6 +19,7 @@ from .saved_card import SavedCard, SavedCardsResponse
 from .subscription import Subscription
 from .subscription_callbacks import SubscriptionChargeCallback, SubscriptionStatusCallback
 from .subscription_list_response import SubscriptionListResponse
+from .subscription_payment_details import SubscriptionPaymentDetails
 from .transaction_export_item import TransactionExportItem, TransactionExportResponse
 from .transaction_export_request import TransactionExportRequest
 from .transaction_status_response import TransactionStatusResponse
@@ -49,6 +50,7 @@ __all__ = [
     "Subscription",
     "SubscriptionChargeCallback",
     "SubscriptionListResponse",
+    "SubscriptionPaymentDetails",
     "SubscriptionStatusCallback",
     "TransactionExportItem",
     "TransactionExportRequest",

@@ -96,7 +96,14 @@ class TestPathParameters:
 class TestSubscriptions:
     def test_create_defaults_to_the_documented_method_id(self):
         """The docs say "always 6"; it is not a PaymentMethodInt member."""
-        method = CreateSubscription(payment_details=PaymentDetails(amount=100.0, currency="RUB"))
+        from aioplatega.enums import SubscriptionInterval
+        from aioplatega.types import SubscriptionPaymentDetails
+
+        method = CreateSubscription(
+            payment_details=SubscriptionPaymentDetails(
+                amount=100, currency="RUB", interval=SubscriptionInterval.MONTH
+            )
+        )
         payload = method.model_dump(by_alias=True, exclude_none=True)
         assert payload["paymentMethod"] == 6
 
