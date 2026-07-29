@@ -2,7 +2,7 @@ from typing import Any, ClassVar
 
 from pydantic import Field
 
-from aioplatega.types import PaymentDetails, PaymentLinkResponse
+from aioplatega.types import PaymentDetails, PaymentLinkResponse, PaymentMetadata
 
 from .base import PlategaMethod
 
@@ -29,4 +29,4 @@ class CreatePaymentLink(PlategaMethod[PaymentLinkResponse]):
     return_url: str | None = Field(None, alias="return")
     failed_url: str | None = Field(None, alias="failedUrl")
     payload: str | None = None
-    metadata: dict[str, Any] | None = None
+    metadata: dict[str, Any] | PaymentMetadata | None = None

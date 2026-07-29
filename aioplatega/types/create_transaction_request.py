@@ -5,6 +5,7 @@ from pydantic import Field
 from ..enums import PaymentMethodInt
 from .base import PlategaObject
 from .payment_details import PaymentDetails
+from .payment_metadata import PaymentMetadata
 
 
 class CreateTransactionRequest(PlategaObject):
@@ -31,7 +32,7 @@ class CreateTransactionRequest(PlategaObject):
     return_url: str | None = Field(None, alias="return")
     failed_url: str | None = Field(None, alias="failedUrl")
     payload: str | None = None
-    metadata: dict[str, Any] | None = None
+    metadata: dict[str, Any] | PaymentMetadata | None = None
 
     if TYPE_CHECKING:
 
@@ -44,7 +45,7 @@ class CreateTransactionRequest(PlategaObject):
             return_url: str | None = None,
             failed_url: str | None = None,
             payload: str | None = None,
-            metadata: dict[str, Any] | None = None,
+            metadata: dict[str, Any] | PaymentMetadata | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(

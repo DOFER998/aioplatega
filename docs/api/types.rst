@@ -66,6 +66,13 @@ CallbackPayload
    :members:
    :show-inheritance:
 
+PaymentMetadata
+---------------
+
+.. automodule:: aioplatega.types.payment_metadata
+   :members:
+   :show-inheritance:
+
 PaymentLinkResponse
 -------------------
 
@@ -139,6 +146,13 @@ SubscriptionPaymentDetails
 --------------------------
 
 .. automodule:: aioplatega.types.subscription_payment_details
+   :members:
+   :show-inheritance:
+
+SubscriptionChargeMetrics
+-------------------------
+
+.. automodule:: aioplatega.types.subscription_charge_metrics
    :members:
    :show-inheritance:
 

@@ -264,3 +264,98 @@ class TestSubscriptionPaymentDetails:
         )
         (_, _, method) = mock_session.calls[0]
         assert method.payment_details.interval == "2"
+
+
+class TestNestedShapesAreTyped:
+    """Nested objects carry documented shapes; a bare dict hides them."""
+
+    def test_metadata_has_the_documented_fields(self):
+        from aioplatega.types import PaymentMetadata
+
+        meta = PaymentMetadata(user_id="u-1", user_name="Ivan")
+        assert meta.model_dump(by_alias=True, exclude_none=True) == {
+            "userId": "u-1",
+            "userName": "Ivan",
+        }
+
+    def test_metadata_still_accepts_extra_keys(self):
+        from aioplatega.types import PaymentMetadata
+
+        meta = PaymentMetadata.model_validate({"userId": "u-1", "shopSpecific": "x"})
+        assert meta.model_dump(by_alias=True, exclude_none=True)["shopSpecific"] == "x"
+
+    def test_a_plain_dict_is_still_accepted_for_metadata(self):
+        from aioplatega.methods import CreateTransaction
+        from aioplatega.types import PaymentDetails
+
+        built = CreateTransaction(
+            payment_method=PaymentMethodInt.SBP_QR,
+            payment_details=PaymentDetails(amount=1.0, currency="RUB"),
+            metadata={"userId": "u-1"},
+        )
+        assert built.model_dump(by_alias=True, exclude_none=True)["metadata"] == {"userId": "u-1"}
+
+    def test_typed_metadata_serializes_to_aliases(self):
+        from aioplatega.methods import CreateTransaction
+        from aioplatega.types import PaymentDetails, PaymentMetadata
+
+        built = CreateTransaction(
+            payment_method=PaymentMethodInt.SBP_QR,
+            payment_details=PaymentDetails(amount=1.0, currency="RUB"),
+            metadata=PaymentMetadata(user_id="u-1", user_name="Ivan"),
+        )
+        dumped = built.model_dump(mode="json", by_alias=True, exclude_none=True)
+        assert dumped["metadata"] == {"userId": "u-1", "userName": "Ivan"}
+
+    def test_charge_metrics_are_typed(self):
+        from aioplatega.types import Subscription
+
+        parsed = Subscription.model_validate(
+            {
+                "id": TID,
+                "chargeMetrics": {
+                    "chargesTotal": 5,
+                    "chargesSuccess": 4,
+                    "chargesFailed": 1,
+                    "totalAmount": 500,
+                    "lastChargeAt": "2026-07-09T09:10:00Z",
+                    "nextChargeAt": "2026-08-09T09:10:00Z",
+                },
+            }
+        )
+        assert parsed.charge_metrics is not None
+        assert parsed.charge_metrics.charges_total == 5
+        assert parsed.charge_metrics.charges_failed == 1
+        assert parsed.charge_metrics.total_amount == 500
+
+    def test_missing_charge_metrics_stays_none(self):
+        from aioplatega.types import Subscription
+
+        assert Subscription.model_validate({"id": TID}).charge_metrics is None
+
+
+class TestMetadataRoundTrip:
+    """What the caller passes is what they get back, and both serialize alike."""
+
+    def test_a_dict_stays_a_dict(self):
+        from aioplatega.methods import CreateTransaction
+        from aioplatega.types import PaymentDetails
+
+        built = CreateTransaction(
+            payment_method=PaymentMethodInt.SBP_QR,
+            payment_details=PaymentDetails(amount=1.0, currency="RUB"),
+            metadata={"orderId": "42"},
+        )
+        assert isinstance(built.metadata, dict)
+        assert built.metadata == {"orderId": "42"}
+
+    def test_a_model_stays_a_model(self):
+        from aioplatega.methods import CreateTransaction
+        from aioplatega.types import PaymentDetails, PaymentMetadata
+
+        built = CreateTransaction(
+            payment_method=PaymentMethodInt.SBP_QR,
+            payment_details=PaymentDetails(amount=1.0, currency="RUB"),
+            metadata=PaymentMetadata(user_id="u-1"),
+        )
+        assert isinstance(built.metadata, PaymentMetadata)

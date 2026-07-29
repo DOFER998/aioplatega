@@ -13,11 +13,13 @@ from .export_url_response import ExportUrlResponse
 from .h2h_qr_response import H2HQrResponse
 from .payment_details import PaymentDetails
 from .payment_link_response import PaymentLinkResponse
+from .payment_metadata import PaymentMetadata
 from .payout import CardPayoutRequest, CardPayoutResponse
 from .rate_response import RateResponse
 from .saved_card import SavedCard, SavedCardsResponse
 from .subscription import Subscription
 from .subscription_callbacks import SubscriptionChargeCallback, SubscriptionStatusCallback
+from .subscription_charge_metrics import SubscriptionChargeMetrics
 from .subscription_list_response import SubscriptionListResponse
 from .subscription_payment_details import SubscriptionPaymentDetails
 from .transaction_export_item import TransactionExportItem, TransactionExportResponse
@@ -42,6 +44,7 @@ __all__ = [
     "H2HQrResponse",
     "PaymentDetails",
     "PaymentLinkResponse",
+    "PaymentMetadata",
     "SequenceResponse",
     "PlategaObject",
     "RateResponse",
@@ -49,6 +52,7 @@ __all__ = [
     "SavedCardsResponse",
     "Subscription",
     "SubscriptionChargeCallback",
+    "SubscriptionChargeMetrics",
     "SubscriptionListResponse",
     "SubscriptionPaymentDetails",
     "SubscriptionStatusCallback",

@@ -52,12 +52,17 @@ antifraud protection and can get the shop suspended**. Ask your Platega
 manager whether it applies to yours.
 
 ```python
+from aioplatega import PaymentMetadata
+
 result = await client.create_transaction(
     payment_method=PaymentMethodInt.SBP_QR,
     payment_details=PaymentDetails(amount=500.0, currency="RUB"),
-    metadata={"userId": "your-internal-user-id"},
+    metadata=PaymentMetadata(user_id="your-internal-user-id", user_name="Ivan"),
 )
 ```
+
+A plain `dict` works too, if your shop needs keys beyond the documented
+`userId` and `userName`.
 :::
 
 :::{tip}

@@ -1,8 +1,7 @@
-from typing import Any
-
 from pydantic import Field
 
 from .base import PlategaObject
+from .subscription_charge_metrics import SubscriptionChargeMetrics
 
 
 class Subscription(PlategaObject):
@@ -28,4 +27,4 @@ class Subscription(PlategaObject):
     description: str | None = None
     created_at: str | None = Field(None, alias="createdAt")
     customer_email: str | None = Field(None, alias="customerEmail")
-    charge_metrics: dict[str, Any] | None = Field(None, alias="chargeMetrics")
+    charge_metrics: SubscriptionChargeMetrics | None = Field(None, alias="chargeMetrics")

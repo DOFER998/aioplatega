@@ -43,6 +43,7 @@ from aioplatega.types import (
     H2HQrResponse,
     PaymentDetails,
     PaymentLinkResponse,
+    PaymentMetadata,
     RateResponse,
     Subscription,
     SubscriptionListResponse,
@@ -254,7 +255,7 @@ class Platega:
         return_url: str | None = None,
         failed_url: str | None = None,
         payload: str | None = None,
-        metadata: dict[str, Any] | None = None,
+        metadata: dict[str, Any] | PaymentMetadata | None = None,
     ) -> PaymentLinkResponse:
         """Create a payment link and let the payer choose the method.
 
