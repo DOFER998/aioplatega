@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/DOFER998/aioplatega/compare/v0.2.1...v0.2.2) (2026-07-29)
+
+
+### Bug Fixes
+
+* re-lock on the release branch instead of trusting an updater ([7a553bf](https://github.com/DOFER998/aioplatega/commit/7a553bf6e3f8b61207ebf6ca7123925cc032109f))
+
 ## [0.2.1](https://github.com/DOFER998/aioplatega/compare/v0.2.0...v0.2.1) (2026-07-29)
 
 
