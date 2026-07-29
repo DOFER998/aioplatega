@@ -8,36 +8,11 @@ from urllib.parse import quote
 import certifi
 from aiohttp import ClientError, ClientSession, TCPConnector
 
-from aioplatega.exceptions import (
-    ClientDecodeError,
-    PlategaAPIError,
-    PlategaBadRequestError,
-    PlategaConflictError,
-    PlategaForbiddenError,
-    PlategaNetworkError,
-    PlategaNotFoundError,
-    PlategaRateLimitError,
-    PlategaServerError,
-    PlategaUnauthorizedError,
-    PlategaUnprocessableEntityError,
-)
+from aioplatega.exceptions import ClientDecodeError, PlategaAPIError, PlategaNetworkError
 from aioplatega.methods.base import PlategaMethod
 
 from .base import API_URL, BaseSession
-
-_STATUS_MAP: Final[dict[int, type[PlategaAPIError]]] = {
-    400: PlategaBadRequestError,
-    401: PlategaUnauthorizedError,
-    403: PlategaForbiddenError,
-    404: PlategaNotFoundError,
-    409: PlategaConflictError,
-    422: PlategaUnprocessableEntityError,
-    429: PlategaRateLimitError,
-}
-
-
-_HTTP_CLIENT_ERROR = 400
-_HTTP_SERVER_ERROR = 500
+from .errors import HTTP_CLIENT_ERROR, raise_for_status
 
 # Failures that genuinely mean the request never made it there and back.
 # Anything else is a bug in this library and must not be disguised as one.
@@ -151,7 +126,7 @@ class AiohttpSession(BaseSession):
             body = await response.json()
         except Exception as decode_exc:
             text = await response.text()
-            if status >= _HTTP_CLIENT_ERROR:
+            if status >= HTTP_CLIENT_ERROR:
                 raise PlategaAPIError(
                     message=text,
                     method=api_method,
@@ -162,17 +137,7 @@ class AiohttpSession(BaseSession):
                 f"Failed to decode response from {api_method}: {text}"
             ) from decode_exc
 
-        if status >= _HTTP_CLIENT_ERROR:
-            message = body.get("message", "") if isinstance(body, dict) else str(body)
-            exc_cls = _STATUS_MAP.get(status)
-            if exc_cls is None:
-                exc_cls = PlategaServerError if status >= _HTTP_SERVER_ERROR else PlategaAPIError
-            raise exc_cls(
-                message=message,
-                method=api_method,
-                status_code=status,
-                body=body,
-            )
+        raise_for_status(status, body, api_method)
 
         try:
             return method.__returning__.model_validate(body)

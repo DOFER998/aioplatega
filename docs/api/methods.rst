@@ -37,3 +37,52 @@ GetConversions
 .. autoclass:: aioplatega.methods.get_conversions.GetConversions
    :members:
    :show-inheritance:
+
+CreatePaymentLink
+-----------------
+
+.. automodule:: aioplatega.methods.create_payment_link
+   :members:
+   :show-inheritance:
+
+GetH2HQr
+--------
+
+.. automodule:: aioplatega.methods.get_h2h_qr
+   :members:
+   :show-inheritance:
+
+GetBalances
+-----------
+
+.. automodule:: aioplatega.methods.get_balances
+   :members:
+   :show-inheritance:
+
+CheckCancelSupported
+--------------------
+
+.. automodule:: aioplatega.methods.check_cancel_supported
+   :members:
+   :show-inheritance:
+
+CancelTransaction
+-----------------
+
+.. automodule:: aioplatega.methods.cancel_transaction
+   :members:
+   :show-inheritance:
+
+Transaction exports
+-------------------
+
+.. automodule:: aioplatega.methods.export_transactions
+   :members:
+   :show-inheritance:
+
+Subscriptions
+-------------
+
+.. automodule:: aioplatega.methods.subscriptions
+   :members:
+   :show-inheritance:

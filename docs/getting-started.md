@@ -60,6 +60,13 @@ print(result.payment_details)  # PaymentDetails or None
 
 ## Getting exchange rate
 
+:::{warning}
+`get_rate()` calls `/rates/payment_method_rate`, which does not appear anywhere
+in the [published API documentation](https://docs.platega.io). It is kept
+because removing it would break existing callers, but treat it as legacy — it
+may be withdrawn without notice.
+:::
+
 ```python
 rate = await client.get_rate(
     payment_method=2,
@@ -154,7 +161,7 @@ from aioplatega import CallbackPayload
 payload = CallbackPayload.model_validate(request_json)
 
 print(payload.id)              # transaction UUID
-print(payload.status)          # "CONFIRMED" | "CANCELED" | "CHARGEBACK"
+print(payload.status)          # "CONFIRMED" | "CANCELED"
 print(payload.amount)          # float
 print(payload.payment_method)  # int
 ```
@@ -167,6 +174,18 @@ print(payload.payment_method)  # int
 - Configure the URL in dashboard: **Settings → Callback URLs**
 :::
 
+Subscriptions send two further callbacks, with PascalCase field names:
+
+```python
+from aioplatega import SubscriptionChargeCallback, SubscriptionStatusCallback
+
+charge = SubscriptionChargeCallback.model_validate(request_json)
+print(charge.subscription_id, charge.next_charge_at)
+
+change = SubscriptionStatusCallback.model_validate(request_json)
+print(change.id, change.status)  # id is the subscription id here
+```
+
 ---
 
 ## Command pattern
@@ -178,9 +197,108 @@ from aioplatega.methods import CreateTransaction
 from aioplatega import PaymentMethodInt, PaymentDetails
 
 method = CreateTransaction(
-    payment_method=PaymentMethodInt.CARDS_RUB,
+    payment_method=PaymentMethodInt.CARD_ACQUIRING,
     payment_details=PaymentDetails(amount=1000.0, currency="RUB"),
 )
 
 result = await client(method)
 ```
+
+---
+
+## Recurring SBP subscriptions
+
+```python
+sub = await client.create_subscription(
+    payment_details=PaymentDetails(amount=100.0, currency="RUB"),
+    description="Premium подписка",
+)
+print(sub.redirect)        # send the payer here to confirm the mandate
+print(sub.transaction_id)  # this is the subscription id — keep it
+```
+
+:::{important}
+`transaction_id` in the create response is the **subscription** id, not a
+transaction id. Every later subscription call takes it.
+:::
+
+```python
+detail = await client.get_subscription(sub.transaction_id)
+page = await client.list_subscriptions(status="Active", page=0, size=20)
+await client.cancel_subscription(sub.transaction_id)
+```
+
+:::{note}
+`status` and `interval_unit` are typed `str | int` because the API returns
+them as numbers in the list response and as words in the single-subscription
+response.
+:::
+
+---
+
+## Refunds
+
+Check first, then cancel — the check reports the USDT cost as well as whether
+it is possible at all:
+
+```python
+check = await client.check_cancel_supported(transaction_id)
+if check.supported:
+    result = await client.cancel_transaction(transaction_id)
+    if result.manual_control_required:
+        print("needs manual handling:", result.message)
+else:
+    print("cannot cancel:", check.block_reason)
+```
+
+---
+
+## Balances and exports
+
+```python
+for balance in await client.get_balances():
+    print(balance.currency, balance.amount, balance.frozen_balance)
+
+link = await client.export_transactions_csv(
+    statuses=["CONFIRMED"],
+    from_date="2026-01-01",
+    to_date="2026-02-01",
+    time_zone_id="Europe/Moscow",
+)
+print(link.url)
+
+rows = await client.export_transactions_json(statuses=["CONFIRMED"])
+for row in rows:
+    print(row.record_id, row.amount, row.currency_code)
+```
+
+The CSV and Excel exports return a download link; the JSON export returns the
+rows inline.
+
+---
+
+## Payouts
+
+Payouts authenticate differently from everything above: a separate secret,
+issued once in the dashboard, signs each request with HMAC-SHA256. The feature
+is off by default on a Platega account and enabled on request.
+
+```python
+from aioplatega import PayoutClient
+
+async with PayoutClient(merchant_id="...", secret="payout-secret") as payouts:
+    cards = await payouts.get_cards()
+    result = await payouts.create_card_payout(
+        card_id=cards[0].card_id,
+        amount_rub=1500,
+        idempotency_key="order-42-payout",
+    )
+    print(result.status, result.amount_usdt_debited)
+```
+
+:::{warning}
+Pass your own `idempotency_key` whenever a retry has to be safe. Without one a
+fresh key is generated per call, so a retried request counts as a second
+payout. Amounts are limited to 1000–87500 RUB, checked client-side before
+anything is sent.
+:::

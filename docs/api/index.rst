@@ -8,4 +8,5 @@ API Reference
    types
    enums
    methods
+   payout
    exceptions

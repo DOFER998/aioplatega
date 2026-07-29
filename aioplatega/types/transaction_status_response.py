@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Any
 from uuid import UUID
 
-from pydantic import Field
+from pydantic import AliasChoices, Field
 
 from ..enums import PaymentStatus
 from .base import PlategaObject
@@ -13,7 +13,12 @@ class TransactionStatusResponse(PlategaObject):
     status: PaymentStatus | None = None
     payment_details: PaymentDetails | None = Field(None, alias="paymentDetails")
     merchant_name: str | None = Field(None, alias="merchantName")
-    merchant_id: UUID | None = Field(None, alias="merchantId")
+    # The vendor spells this "mechantId" in both the schema and the response
+    # example. AliasChoices keeps the correct spelling working too, in case
+    # the typo is ever fixed server-side.
+    merchant_id: UUID | None = Field(
+        None, validation_alias=AliasChoices("mechantId", "merchantId"), alias="mechantId"
+    )
     commission: float | None = Field(None, alias="comission")
     payment_method: str | None = Field(None, alias="paymentMethod")
     expires_in: str | None = Field(None, alias="expiresIn")

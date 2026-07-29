@@ -23,7 +23,7 @@ aioplatega
     :alt: Tests
 
 **aioplatega** is a modern and fully asynchronous SDK for the
-`Platega payment API <https://platega.io>`_ written in Python 3.10+ using
+`Platega payment API <https://platega.io>`_ written in Python 3.12+ using
 `asyncio <https://docs.python.org/3/library/asyncio.html>`_ and
 `aiohttp <https://github.com/aio-libs/aiohttp>`_.
 
@@ -37,7 +37,9 @@ Features
 - Type-safe with `Pydantic v2 <https://docs.pydantic.dev/latest/>`_ models and full type annotations
 - Supports `mypy <http://mypy-lang.org/>`_ strict mode
 - Command-pattern method objects for every API endpoint
-- Typed exception hierarchy for every HTTP status
+- Covers payments, recurring SBP subscriptions, refunds, exports, balances and payouts
+- Payout API support with PG-HMAC request signing and idempotency keys
+- Typed exception hierarchy: every failure is a ``PlategaError``
 - Lazy connection pool with ``aiohttp``
 
 
@@ -70,6 +72,20 @@ Quick Start
             print(result.transaction_id, result.status)
 
     asyncio.run(main())
+
+
+Payouts
+=======
+
+Payouts use a separate secret and sign every request with HMAC-SHA256:
+
+.. code-block:: python
+
+    from aioplatega import PayoutClient
+
+    async with PayoutClient(merchant_id="your-id", secret="payout-secret") as payouts:
+        cards = await payouts.get_cards()
+        result = await payouts.create_card_payout(card_id=cards[0].card_id, amount_rub=1500)
 
 
 Community
