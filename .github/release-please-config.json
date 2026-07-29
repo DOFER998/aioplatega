@@ -48,13 +48,6 @@
           "section": "Miscellaneous",
           "hidden": true
         }
-      ],
-      "extra-files": [
-        {
-          "type": "toml",
-          "path": "uv.lock",
-          "jsonpath": "$.package[?(@.name=='aioplatega')].version"
-        }
       ]
     }
   }

@@ -39,6 +39,43 @@ jobs:
           config-file: .github/release-please-config.json
           manifest-file: .github/.release-please-manifest.json
 
+      # uv.lock records the project's own version beside every dependency, so
+      # a release that touches pyproject.toml alone leaves `uv sync --locked`
+      # failing on every workflow. release-please updates the files its python
+      # strategy knows about, and a lockfile from a tool that postdates the
+      # strategy is not among them. Re-locking on its branch keeps the two in
+      # step without depending on an updater matching the file's shape.
+      - uses: actions/checkout@v7
+        if: steps.release.outputs.pr
+        with:
+          fetch-depth: 0
+
+      - name: Install uv
+        if: steps.release.outputs.pr
+        uses: astral-sh/setup-uv@v9.0.0
+        with:
+          enable-cache: true
+          python-version: "3.12"
+
+      - name: Sync uv.lock on the release branch
+        if: steps.release.outputs.pr
+        env:
+          PR: ${{ steps.release.outputs.pr }}
+        run: |
+          set -euo pipefail
+          branch=$(echo "$PR" | jq -r .headBranchName)
+          git fetch origin "$branch"
+          git checkout "$branch"
+          uv lock
+          if git diff --quiet uv.lock; then
+            echo "uv.lock already matches the released version"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: sync uv.lock with the released version" uv.lock
+          git push origin "$branch"
+
   build:
     name: Build distribution
     needs: release-please
