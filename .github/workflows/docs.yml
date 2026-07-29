@@ -3,39 +3,57 @@ name: Docs
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 permissions:
-  contents: write
-  pages: write
-  id-token: write
+  contents: read
 
 concurrency:
   group: docs-deploy
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    name: Deploy documentation
+  build:
+    name: Build documentation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: astral-sh/setup-uv@v9.0.0
         with:
+          enable-cache: true
           python-version: "3.12"
 
       - name: Install dependencies
-        run: uv sync --group docs
+        run: uv sync --locked --group docs
 
+      # -W turns warnings into errors: a broken cross-reference or a stale
+      # autodoc target should fail here, not ship as a half-empty page.
       - name: Build docs
-        run: uv run sphinx-build -b html docs docs/_build/html
+        run: uv run sphinx-build -b html -W --keep-going docs docs/_build/html
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload Pages artifact
+        if: github.event_name == 'push'
+        uses: actions/upload-pages-artifact@v5
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/_build/html
+          path: docs/_build/html
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      # The official Pages deployment is OIDC-based, so it needs no write
+      # access to repository contents — unlike pushing to a gh-pages branch.
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5

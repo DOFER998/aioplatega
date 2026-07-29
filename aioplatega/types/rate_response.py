@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Optional
 
 from pydantic import Field
 
@@ -7,29 +6,18 @@ from .base import PlategaObject
 
 
 class RateResponse(PlategaObject):
-    payment_method: Optional[int] = Field(None, alias="paymentMethod")
-    currency_from: Optional[str] = Field(None, alias="currencyFrom")
-    currency_to: Optional[str] = Field(None, alias="currencyTo")
-    rate: Optional[float] = None
-    updated_at: Optional[datetime] = Field(None, alias="updatedAt")
+    """An exchange rate between two currencies for a payment method.
 
-    if TYPE_CHECKING:
+    Note:
+        ``updated_at`` appears in the GitBook example but not in live
+        responses, so it is optional. Rates are directional: a pair the API
+        answers in one direction may return 404 in the other.
+    """
 
-        def __init__(
-            __pydantic__self__,
-            *,
-            payment_method: Optional[int] = None,
-            currency_from: Optional[str] = None,
-            currency_to: Optional[str] = None,
-            rate: Optional[float] = None,
-            updated_at: Optional[datetime] = None,
-            **__pydantic_kwargs: Any,
-        ) -> None:
-            super().__init__(
-                payment_method=payment_method,
-                currency_from=currency_from,
-                currency_to=currency_to,
-                rate=rate,
-                updated_at=updated_at,
-                **__pydantic_kwargs,
-            )
+    id: str | None = None
+    merchant_id: str | None = Field(None, alias="merchantId")
+    payment_method: int | None = Field(None, alias="paymentMethod")
+    currency_from: str | None = Field(None, alias="currencyFrom")
+    currency_to: str | None = Field(None, alias="currencyTo")
+    rate: float | None = None
+    updated_at: datetime | None = Field(None, alias="updatedAt")

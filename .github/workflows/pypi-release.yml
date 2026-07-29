@@ -1,30 +1,69 @@
-name: Publish to PyPI
+name: Publish
 
+# Two ways in:
+#   * called by release-please.yml once a Release PR is merged
+#
+# The filename is load-bearing: PyPI trusted publishing pins the workflow by
+# name, so renaming this file invalidates the publisher configuration.
+#   * a tag pushed by hand, for the rare release made outside that flow
+#
+# The first path exists because a tag pushed with GITHUB_TOKEN does not
+# trigger workflows — GitHub suppresses that to avoid recursion — so the
+# release job has to invoke this workflow directly. A called workflow sees
+# the *caller's* ref, not the tag, which is why the tag is passed in.
 on:
   push:
-    tags:
-      - "v*"
+    tags: ["v*"]
+  workflow_call:
+    inputs:
+      tag:
+        description: Tag to publish, e.g. v1.2.3
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  TAG: ${{ inputs.tag || github.ref_name }}
 
 jobs:
   build:
     name: Build distribution
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.ref_name }}
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: astral-sh/setup-uv@v9.0.0
         with:
-          python-version: "3.10"
+          enable-cache: true
+          python-version: "3.12"
 
-      - name: Build package
+      # Catches the case where the tag was moved or created off the wrong
+      # commit; publishing a mislabelled version to PyPI cannot be undone.
+      - name: Verify the tag matches the packaged version
+        run: |
+          set -euo pipefail
+          packaged=$(uv version --short)
+          expected="${TAG#v}"
+          if [ "$packaged" != "$expected" ]; then
+            echo "::error::tag $TAG does not match the packaged version $packaged"
+            exit 1
+          fi
+
+      - name: Build
         run: uv build
 
+      # A broken sdist or a README that PyPI refuses to render otherwise only
+      # surfaces at upload time, once the tag already exists.
+      - name: Check metadata
+        run: uvx twine check --strict dist/*
+
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/
@@ -33,15 +72,41 @@ jobs:
     name: Publish to PyPI
     needs: build
     runs-on: ubuntu-latest
-    environment: pypi
+    environment:
+      name: pypi
+      url: https://pypi.org/p/aioplatega
     permissions:
+      # Trusted publishing: PyPI verifies this workflow's OIDC identity, so
+      # there is no long-lived API token to store or rotate.
       id-token: write
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: dist
           path: dist/
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+
+  attach-artifacts:
+    name: Attach distributions to the release
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+
+      # release-please writes the release and its notes from the commit
+      # messages; this only adds the built files to it. `generate_release_notes`
+      # would overwrite that changelog with GitHub's own list of PRs.
+      - name: Attach files
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ inputs.tag || github.ref_name }}
+          files: dist/*

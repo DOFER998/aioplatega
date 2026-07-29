@@ -2,8 +2,7 @@
 
 package_dir := aioplatega
 tests_dir := tests
-scripts_dir := scripts
-code_dir := $(package_dir) $(tests_dir) $(scripts_dir)
+code_dir := $(package_dir) $(tests_dir)
 reports_dir := reports
 
 # =================================================================================================
@@ -32,9 +31,9 @@ install: clean
 
 .PHONY: lint
 lint:
-	uv run ruff format --check --diff $(package_dir)
-	uv run ruff check --show-fixes $(package_dir)
-	uv run mypy $(package_dir)
+	uv run ruff format --check --diff $(code_dir)
+	uv run ruff check --show-fixes $(code_dir)
+	uv run mypy $(code_dir)
 
 .PHONY: reformat
 reformat:
@@ -66,15 +65,14 @@ test-coverage-view:
 build: clean
 	uv build
 
-.PHONY: bump
-bump:
-	uv run python scripts/bump_version.py $(args)
-
+# Releases are cut by release-please: merge the Release PR it keeps open
+# against main and the tag, changelog and PyPI upload follow from that. This
+# target only exists for a release made outside that flow.
 .PHONY: release
 release:
-	git add .
-	git commit -m "Release $(shell uv run python -c 'from aioplatega import __version__; print(__version__)')"
-	git tag v$(shell uv run python -c 'from aioplatega import __version__; print(__version__)')
+	git add pyproject.toml uv.lock
+	git commit -m "chore: release $(shell uv version --short)"
+	git tag -a v$(shell uv version --short) -m "Release $(shell uv version --short)"
 
 # =================================================================================================
 # Documentation

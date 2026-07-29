@@ -8,6 +8,13 @@ from .base import PlategaMethod
 
 
 class GetRate(PlategaMethod[RateResponse]):
+    """GET ``/rates/payment_method_rate`` -- exchange rate for a method.
+
+    Note:
+        Documented in the older GitBook, not at https://docs.platega.io, which
+        does not list this endpoint at all.
+    """
+
     __api_method__: ClassVar[str] = "/rates/payment_method_rate"
     __http_method__: ClassVar[str] = "GET"
     __returning__: ClassVar[type] = RateResponse

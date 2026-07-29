@@ -1,31 +1,51 @@
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from pydantic import Field
 
 from ..enums import PaymentMethodInt
 from .base import PlategaObject
 from .payment_details import PaymentDetails
+from .payment_metadata import PaymentMetadata
 
 
 class CreateTransactionRequest(PlategaObject):
-    payment_method: PaymentMethodInt = Field(alias="paymentMethod")
+    """Body for creating a transaction.
+
+    Note:
+        Do not supply an ``id``. The API generates the transaction id.
+
+        ``metadata`` carries the payer identifier. Shops in certain categories
+        are required to send ``metadata.userId``; where that requirement
+        applies, omitting it disables antifraud protection and can get the
+        shop suspended. Ask your Platega manager whether it applies to yours.
+
+        ``payment_method`` accepts any integer, not only a
+        :class:`~aioplatega.enums.PaymentMethodInt` member. The enum names the
+        documented methods, but the GitBook records that ids 1 through 9 are
+        P2P and a merchant is enabled for whichever their contract covers, so
+        a closed set would lock those merchants out.
+    """
+
+    payment_method: PaymentMethodInt | int = Field(alias="paymentMethod")
     payment_details: PaymentDetails = Field(alias="paymentDetails")
-    description: Optional[str] = None
-    return_url: Optional[str] = Field(None, alias="return")
-    failed_url: Optional[str] = Field(None, alias="failedUrl")
-    payload: Optional[str] = None
+    description: str | None = None
+    return_url: str | None = Field(None, alias="return")
+    failed_url: str | None = Field(None, alias="failedUrl")
+    payload: str | None = None
+    metadata: dict[str, Any] | PaymentMetadata | None = None
 
     if TYPE_CHECKING:
 
         def __init__(
             __pydantic__self__,
             *,
-            payment_method: PaymentMethodInt,
+            payment_method: PaymentMethodInt | int,
             payment_details: PaymentDetails,
-            description: Optional[str] = None,
-            return_url: Optional[str] = None,
-            failed_url: Optional[str] = None,
-            payload: Optional[str] = None,
+            description: str | None = None,
+            return_url: str | None = None,
+            failed_url: str | None = None,
+            payload: str | None = None,
+            metadata: dict[str, Any] | PaymentMetadata | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -35,5 +55,6 @@ class CreateTransactionRequest(PlategaObject):
                 return_url=return_url,
                 failed_url=failed_url,
                 payload=payload,
+                metadata=metadata,
                 **__pydantic_kwargs,
             )

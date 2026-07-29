@@ -35,8 +35,8 @@ class TestClientDispatch:
 
         assert len(mock_session.calls) == 1
         merchant_id, secret, called_method = mock_session.calls[0]
-        assert merchant_id == "test-merchant"
-        assert secret == "test-secret"
+        assert merchant_id == client._merchant_id
+        assert secret == client._secret
         assert isinstance(called_method, CreateTransaction)
         assert isinstance(result, CreateTransactionResponse)
 
@@ -99,7 +99,7 @@ class TestConvenienceMethods:
         _, _, method = mock_session.calls[0]
         assert isinstance(method, GetRate)
         data = method.model_dump(by_alias=False)
-        assert data["merchant_id"] == "test-merchant"
+        assert data["merchant_id"] == client._merchant_id
 
     async def test_get_conversions(self, client, mock_session):
         expected = ConversionsResponse()

@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-from typing import Any, ClassVar, Generic, TypeVar
+from typing import Any, ClassVar
 
 from aioplatega.types.base import PlategaObject
 
-PlategaType = TypeVar("PlategaType")
 
-
-class PlategaMethod(PlategaObject, Generic[PlategaType]):
+class PlategaMethod[PlategaType](PlategaObject):
     """Base class for all Platega API methods (command pattern).
 
     Subclasses must specify:

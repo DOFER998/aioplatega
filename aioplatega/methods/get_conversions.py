@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, ClassVar, Optional
+from typing import TYPE_CHECKING, Any, ClassVar
 
 from pydantic import Field
 
@@ -8,12 +8,14 @@ from .base import PlategaMethod
 
 
 class GetConversions(PlategaMethod[ConversionsResponse]):
+    """GET ``/transaction/balance-unlock-operations`` -- balance unlocks."""
+
     __api_method__: ClassVar[str] = "/transaction/balance-unlock-operations"
     __http_method__: ClassVar[str] = "GET"
     __returning__: ClassVar[type] = ConversionsResponse
 
-    from_date: Optional[str] = Field(None, alias="from")
-    to_date: Optional[str] = Field(None, alias="to")
+    from_date: str | None = Field(None, alias="from")
+    to_date: str | None = Field(None, alias="to")
     page: int = 0
     size: int = 20
 
@@ -22,8 +24,8 @@ class GetConversions(PlategaMethod[ConversionsResponse]):
         def __init__(
             __pydantic__self__,
             *,
-            from_date: Optional[str] = None,
-            to_date: Optional[str] = None,
+            from_date: str | None = None,
+            to_date: str | None = None,
             page: int = 0,
             size: int = 20,
             **__pydantic_kwargs: Any,

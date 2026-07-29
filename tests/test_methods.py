@@ -140,3 +140,39 @@ class TestGetConversions:
         assert "to" in data
         assert data["page"] == 0
         assert data["size"] == 20
+
+
+class TestRequestSchemaIsNotDuplicated:
+    """CreateTransaction and CreateTransactionRequest describe the same payload.
+
+    They must not drift: the method derives its fields from the documented
+    request type rather than restating them.
+    """
+
+    def test_method_derives_from_request_type(self):
+        from aioplatega.types import CreateTransactionRequest
+
+        assert issubclass(CreateTransaction, CreateTransactionRequest)
+
+    def test_fields_are_identical(self):
+        from aioplatega.types import CreateTransactionRequest
+
+        assert set(CreateTransaction.model_fields) == set(CreateTransactionRequest.model_fields)
+
+    def test_aliases_are_identical(self):
+        from aioplatega.types import CreateTransactionRequest
+
+        method_aliases = {n: f.alias for n, f in CreateTransaction.model_fields.items()}
+        request_aliases = {n: f.alias for n, f in CreateTransactionRequest.model_fields.items()}
+        assert method_aliases == request_aliases
+
+
+class TestGetRateAcceptsEnum:
+    def test_payment_method_enum_is_accepted(self):
+        method = GetRate(
+            merchant_id="m-123",
+            payment_method=PaymentMethodInt.CARDS_RUB,
+            currency_from="RUB",
+            currency_to="USDT",
+        )
+        assert method.payment_method == 10
