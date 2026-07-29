@@ -9,13 +9,22 @@ from .payment_details import PaymentDetails
 
 
 class TransactionStatusResponse(PlategaObject):
+    """Full state of a transaction.
+
+    Note:
+        ``merchant_id`` accepts both ``mechantId`` and ``merchantId``. The API
+        spells it ``mechantId`` in the published schema and in its own example;
+        the correct spelling is accepted as well, should the typo ever be
+        fixed server-side.
+
+        Several other fields keep the API's spelling in their aliases for the
+        same reason: ``comission``, ``comissionUsdt``, ``comissionType``.
+    """
+
     id: UUID | None = None
     status: PaymentStatus | None = None
     payment_details: PaymentDetails | None = Field(None, alias="paymentDetails")
     merchant_name: str | None = Field(None, alias="merchantName")
-    # The vendor spells this "mechantId" in both the schema and the response
-    # example. AliasChoices keeps the correct spelling working too, in case
-    # the typo is ever fixed server-side.
     merchant_id: UUID | None = Field(
         None, validation_alias=AliasChoices("mechantId", "merchantId"), alias="mechantId"
     )

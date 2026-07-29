@@ -7,6 +7,8 @@ from .base import PlategaObject
 
 
 class ConversionItem(PlategaObject):
+    """A single balance-unlock (conversion) operation."""
+
     id: int | None = None
     amount: float | None = None
     currency: str | None = None

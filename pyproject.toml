@@ -144,8 +144,6 @@ show_absolute_path = true
 module = "tests.*"
 disallow_untyped_defs = false
 disallow_untyped_decorators = false
-# Models are constructed by field alias (populate_by_name=True); the hand-written
-# TYPE_CHECKING __init__ stubs only declare snake_case names, so mypy cannot see it.
 disable_error_code = ["call-arg"]
 
 [[tool.mypy.overrides]]

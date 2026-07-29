@@ -45,11 +45,15 @@ MAX_PAYOUT_RUB: Final[int] = 87500
 class PayoutClient:
     """Async client for the Platega Payout API.
 
-    Usage::
+    Example:
+        .. code-block:: python
 
-        async with PayoutClient(merchant_id="...", secret="...") as payouts:
-            cards = await payouts.get_cards()
-            result = await payouts.create_card_payout(card_id=cards[0].card_id, amount_rub=1500)
+            async with PayoutClient(merchant_id="...", secret="...") as payouts:
+                cards = await payouts.get_cards()
+                result = await payouts.create_card_payout(
+                    card_id=cards[0].card_id,
+                    amount_rub=1500,
+                )
     """
 
     def __init__(
@@ -87,6 +91,28 @@ class PayoutClient:
         params: dict[str, str] | None = None,
         idempotency_key: str = "",
     ) -> Any:
+        """Sign a request and send it.
+
+        Args:
+            http_method: HTTP verb, contributed to the signature.
+            path: Request path, contributed to the signature.
+            body: JSON body, or ``None`` for a bodiless request.
+            params: Query parameters, which are not signed.
+            idempotency_key: Reuse-protection key, empty for reads.
+
+        Returns:
+            The decoded JSON response.
+
+        Raises:
+            PlategaNetworkError: If the request never reached the server.
+            PlategaAPIError: If the server reported a failure.
+            ClientDecodeError: If a successful response was not valid JSON.
+
+        Note:
+            The body is passed as ``data`` rather than ``json`` so the exact
+            bytes that were signed reach the socket. Handing aiohttp the dict
+            would let it re-encode, and the signature would no longer match.
+        """
         session = self._get_session()
         payload = serialize_body(body)
         timestamp = int(time.time())
@@ -104,8 +130,6 @@ class PayoutClient:
             headers["Content-Type"] = "application/json"
 
         try:
-            # `data=payload`, not `json=body`: aiohttp would re-encode the dict
-            # and the bytes would no longer match what was signed.
             response = await session.request(
                 http_method,
                 f"{self._api_url}{path}",

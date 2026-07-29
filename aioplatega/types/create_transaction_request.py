@@ -8,6 +8,12 @@ from .payment_details import PaymentDetails
 
 
 class CreateTransactionRequest(PlategaObject):
+    """Body for creating a transaction.
+
+    Note:
+        Do not supply an ``id``. The API generates the transaction id.
+    """
+
     payment_method: PaymentMethodInt = Field(alias="paymentMethod")
     payment_details: PaymentDetails = Field(alias="paymentDetails")
     description: str | None = None

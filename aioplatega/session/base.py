@@ -23,8 +23,17 @@ class BaseSession(ABC):
         secret: str,
         method: PlategaMethod[Any],
     ) -> Any:
-        """Execute an API method and return the parsed response."""
+        """Execute an API method and return the parsed response.
+
+        Args:
+            merchant_id: Merchant identifier, sent as ``X-MerchantId``.
+            secret: Secret key, sent as ``X-Secret``.
+            method: The method object describing the request.
+
+        Returns:
+            An instance of the method's ``__returning__`` model.
+        """
 
     @abstractmethod
     async def close(self) -> None:
-        """Release underlying resources (connection pool, etc.)."""
+        """Release underlying resources, such as the connection pool."""

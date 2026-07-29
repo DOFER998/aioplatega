@@ -69,10 +69,11 @@ def _validated() -> Iterator[None]:
 class Platega:
     """Async client for the Platega payment API.
 
-    Usage::
+    Example:
+        .. code-block:: python
 
-        async with Platega(merchant_id="...", secret="...") as client:
-            result = await client.create_transaction(...)
+            async with Platega(merchant_id="...", secret="...") as client:
+                result = await client.create_transaction(...)
     """
 
     def __init__(
@@ -187,11 +188,11 @@ class Platega:
         Raises:
             PlategaValidationError: If the arguments are not a valid request.
 
-        .. warning::
-           This endpoint does not appear anywhere in the published API
-           documentation at https://docs.platega.io. It is kept because
-           removing it would break existing callers, but treat it as legacy:
-           it may be withdrawn without notice.
+        Warning:
+            This endpoint does not appear anywhere in the published API
+            documentation at https://docs.platega.io. It is kept because
+            removing it would break existing callers, but treat it as legacy:
+            it may be withdrawn without notice.
         """
         with _validated():
             method = GetRate(
@@ -246,10 +247,21 @@ class Platega:
         """Create a payment link and let the payer choose the method.
 
         Unlike :meth:`create_transaction`, no payment method is fixed up
-        front — the payer picks one on the hosted page.
+        front: the payer picks one on the hosted page.
+
+        Args:
+            payment_details: Amount and currency for the payment.
+            description: Human-readable description shown to the payer.
+            return_url: Where to send the payer after a successful payment.
+            failed_url: Where to send the payer after a failed payment.
+            payload: Arbitrary string passed through to the callback.
+            metadata: Extra data required for some merchant categories.
 
         Returns:
             The hosted payment URL, transaction id, status and rate.
+
+        Raises:
+            PlategaValidationError: If the arguments are not a valid request.
         """
         with _validated():
             method = CreatePaymentLink(
@@ -263,7 +275,18 @@ class Platega:
         return await self(method)
 
     async def get_h2h_qr(self, transaction_id: str | UUID) -> H2HQrResponse:
-        """Get the QR code or payment link for a host-to-host transaction."""
+        """Get the QR code or payment link for a host-to-host transaction.
+
+        Args:
+            transaction_id: UUID of the transaction, as a :class:`~uuid.UUID`
+                or its string form.
+
+        Returns:
+            The amount and the QR payload or link.
+
+        Raises:
+            PlategaValidationError: If ``transaction_id`` is not a valid UUID.
+        """
         with _validated():
             method = GetH2HQr(transaction_id=transaction_id)
         return await self(method)
@@ -271,10 +294,14 @@ class Platega:
     async def get_balances(self) -> BalancesResponse:
         """Get merchant balances, one entry per currency.
 
-        The result is iterable::
+        Returns:
+            An iterable of :class:`~aioplatega.types.BalanceItem`.
 
-            for balance in await client.get_balances():
-                print(balance.currency, balance.amount)
+        Example:
+            .. code-block:: python
+
+                for balance in await client.get_balances():
+                    print(balance.currency, balance.amount)
         """
         return await self(GetBalances())
 
@@ -284,8 +311,17 @@ class Platega:
     ) -> CancelSupportedResponse:
         """Check whether a transaction can be cancelled, and what it costs.
 
-        A ``supported`` of ``False`` is a normal answer, not an error — read
-        ``block_reason`` for why.
+        Args:
+            transaction_id: UUID of the transaction, as a :class:`~uuid.UUID`
+                or its string form.
+
+        Returns:
+            Whether cancellation is possible and the USDT it would deduct. A
+            ``supported`` of ``False`` is a normal answer, not an error; read
+            ``block_reason`` for why.
+
+        Raises:
+            PlategaValidationError: If ``transaction_id`` is not a valid UUID.
         """
         with _validated():
             method = CheckCancelSupported(transaction_id=transaction_id)
@@ -297,8 +333,20 @@ class Platega:
     ) -> CancelTransactionResponse:
         """Cancel a transaction and refund the payer.
 
-        Call :meth:`check_cancel_supported` first: an ``accepted=False`` with
-        ``manual_control_required=True`` means a human has to pick it up.
+        Args:
+            transaction_id: UUID of the transaction, as a :class:`~uuid.UUID`
+                or its string form.
+
+        Returns:
+            The outcome. An ``accepted`` of ``False`` with
+            ``manual_control_required`` set means a human has to pick it up.
+
+        Raises:
+            PlategaValidationError: If ``transaction_id`` is not a valid UUID.
+
+        Note:
+            Call :meth:`check_cancel_supported` first to learn whether the
+            cancellation is possible and what it will cost.
         """
         with _validated():
             method = CancelTransaction(transaction_id=transaction_id)
@@ -313,7 +361,22 @@ class Platega:
         to_date: str | None = None,
         time_zone_id: str | None = None,
     ) -> ExportUrlResponse:
-        """Export filtered transactions to CSV, returning a download link."""
+        """Export filtered transactions to CSV.
+
+        Args:
+            statuses: Restrict to these transaction statuses.
+            payment_methods: Restrict to these payment method names.
+            from_date: Start of the period, as an ISO date string.
+            to_date: End of the period, as an ISO date string.
+            time_zone_id: Time zone the dates are expressed in, e.g.
+                ``"Europe/Moscow"``.
+
+        Returns:
+            A link to the generated file.
+
+        Raises:
+            PlategaValidationError: If the arguments are not a valid request.
+        """
         with _validated():
             method = ExportTransactionsCsv(
                 statuses=statuses,
@@ -333,7 +396,22 @@ class Platega:
         to_date: str | None = None,
         time_zone_id: str | None = None,
     ) -> ExportUrlResponse:
-        """Export filtered transactions to Excel, returning a download link."""
+        """Export filtered transactions to Excel.
+
+        Args:
+            statuses: Restrict to these transaction statuses.
+            payment_methods: Restrict to these payment method names.
+            from_date: Start of the period, as an ISO date string.
+            to_date: End of the period, as an ISO date string.
+            time_zone_id: Time zone the dates are expressed in, e.g.
+                ``"Europe/Moscow"``.
+
+        Returns:
+            A link to the generated file.
+
+        Raises:
+            PlategaValidationError: If the arguments are not a valid request.
+        """
         with _validated():
             method = ExportTransactionsExcel(
                 statuses=statuses,
@@ -357,6 +435,20 @@ class Platega:
 
         Unlike the CSV and Excel exports, this returns the rows inline rather
         than a download link.
+
+        Args:
+            statuses: Restrict to these transaction statuses.
+            payment_methods: Restrict to these payment method names.
+            from_date: Start of the period, as an ISO date string.
+            to_date: End of the period, as an ISO date string.
+            time_zone_id: Time zone the dates are expressed in, e.g.
+                ``"Europe/Moscow"``.
+
+        Returns:
+            An iterable of :class:`~aioplatega.types.TransactionExportItem`.
+
+        Raises:
+            PlategaValidationError: If the arguments are not a valid request.
         """
         with _validated():
             method = ExportTransactionsJson(
@@ -376,9 +468,21 @@ class Platega:
     ) -> CreateSubscriptionResponse:
         """Create a recurring SBP subscription.
 
-        Send the payer to the ``redirect`` URL to confirm the mandate. The
-        ``transaction_id`` in the response is the subscription id — keep it,
-        every later subscription call takes it.
+        Args:
+            payment_details: Amount and currency charged on each cycle.
+            description: Shown to the payer on the payment form and in the
+                email sent after each charge.
+
+        Returns:
+            The subscription, including the ``redirect`` URL to send the payer
+            to so they can confirm the mandate.
+
+        Raises:
+            PlategaValidationError: If the arguments are not a valid request.
+
+        Note:
+            ``transaction_id`` in the response is the subscription id. Keep
+            it: every later subscription call takes it.
         """
         with _validated():
             method = CreateSubscription(
@@ -388,7 +492,18 @@ class Platega:
         return await self(method)
 
     async def get_subscription(self, subscription_id: str | UUID) -> Subscription:
-        """Get a single subscription by id."""
+        """Get a single subscription by id.
+
+        Args:
+            subscription_id: UUID of the subscription, as a
+                :class:`~uuid.UUID` or its string form.
+
+        Returns:
+            The subscription and its charge schedule.
+
+        Raises:
+            PlategaValidationError: If ``subscription_id`` is not a valid UUID.
+        """
         with _validated():
             method = GetSubscription(subscription_id=subscription_id)
         return await self(method)
@@ -402,7 +517,21 @@ class Platega:
         page: int | None = None,
         size: int | None = None,
     ) -> SubscriptionListResponse:
-        """List subscriptions, optionally filtered by status and date range."""
+        """List subscriptions, optionally filtered by status and date range.
+
+        Args:
+            status: Restrict to subscriptions in this state.
+            from_date: Start of the period, as an ISO date string.
+            to_date: End of the period, as an ISO date string.
+            page: Zero-based page number.
+            size: Number of items per page.
+
+        Returns:
+            One page of subscriptions, with the total count.
+
+        Raises:
+            PlategaValidationError: If the arguments are not a valid request.
+        """
         with _validated():
             method = ListSubscriptions(
                 status=status,
@@ -419,9 +548,20 @@ class Platega:
     ) -> CancelSubscriptionResponse:
         """Cancel a subscription, stopping all future charges.
 
-        Idempotent. The payer can also cancel from the link in the emails sent
-        after each charge, which arrives as a ``SUBSCRIPTION_CANCELLED``
-        callback.
+        Args:
+            subscription_id: UUID of the subscription, as a
+                :class:`~uuid.UUID` or its string form.
+
+        Returns:
+            The subscription id and its resulting status.
+
+        Raises:
+            PlategaValidationError: If ``subscription_id`` is not a valid UUID.
+
+        Note:
+            Idempotent. The payer can also cancel from the link in the emails
+            sent after each charge, which arrives as a
+            ``SUBSCRIPTION_CANCELLED`` callback.
         """
         with _validated():
             method = CancelSubscription(subscription_id=subscription_id)

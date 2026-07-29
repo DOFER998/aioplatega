@@ -4,6 +4,8 @@ from .base import PlategaObject
 
 
 class PaymentDetails(PlategaObject):
+    """Amount and currency of a payment."""
+
     amount: float
     currency: str
 

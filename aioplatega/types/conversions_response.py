@@ -7,6 +7,8 @@ from .conversion_item import ConversionItem
 
 
 class ConversionsResponse(PlategaObject):
+    """A page of balance-unlock operations."""
+
     content: list[ConversionItem] = Field(default_factory=list)
     total_elements: int = Field(0, alias="totalElements")
     total_pages: int = Field(0, alias="totalPages")

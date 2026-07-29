@@ -9,6 +9,8 @@ from .base import PlategaMethod
 
 
 class GetTransactionStatus(PlategaMethod[TransactionStatusResponse]):
+    """GET ``/transaction/{id}`` -- status and details of a transaction."""
+
     __api_method__: ClassVar[str] = "/transaction/{transaction_id}"
     __http_method__: ClassVar[str] = "GET"
     __returning__: ClassVar[type] = TransactionStatusResponse

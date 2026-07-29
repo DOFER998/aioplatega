@@ -7,6 +7,12 @@ from .base import PlategaObject
 
 
 class CallbackPayload(PlategaObject):
+    """Body of the transaction-status callback.
+
+    Delivered to the callback URL configured in the dashboard, with the
+    ``X-MerchantId`` and ``X-Secret`` headers for verification.
+    """
+
     id: UUID
     amount: float
     currency: str

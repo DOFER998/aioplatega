@@ -7,6 +7,8 @@ from .base import PlategaObject
 
 
 class RateResponse(PlategaObject):
+    """An exchange rate between two currencies for a payment method."""
+
     payment_method: int | None = Field(None, alias="paymentMethod")
     currency_from: str | None = Field(None, alias="currencyFrom")
     currency_to: str | None = Field(None, alias="currencyTo")

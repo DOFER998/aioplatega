@@ -8,6 +8,8 @@ from .base import PlategaMethod
 
 
 class GetConversions(PlategaMethod[ConversionsResponse]):
+    """GET ``/transaction/balance-unlock-operations`` -- balance unlocks."""
+
     __api_method__: ClassVar[str] = "/transaction/balance-unlock-operations"
     __http_method__: ClassVar[str] = "GET"
     __returning__: ClassVar[type] = ConversionsResponse

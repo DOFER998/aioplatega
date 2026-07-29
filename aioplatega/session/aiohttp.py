@@ -14,13 +14,16 @@ from aioplatega.methods.base import PlategaMethod
 from .base import API_URL, BaseSession
 from .errors import HTTP_CLIENT_ERROR, raise_for_status
 
-# Failures that genuinely mean the request never made it there and back.
-# Anything else is a bug in this library and must not be disguised as one.
 _NETWORK_ERRORS: Final[tuple[type[BaseException], ...]] = (
     ClientError,
     asyncio.TimeoutError,
     OSError,
 )
+"""Failures meaning the request never made it there and back.
+
+Anything outside this tuple is a defect in this library and is left to
+propagate, rather than being reported as a connectivity problem.
+"""
 
 
 def _build_ssl_context() -> ssl.SSLContext:
@@ -31,10 +34,16 @@ class AiohttpSession(BaseSession):
     """``aiohttp``-backed session with lazy connection pool creation."""
 
     def __init__(self, api_url: str = API_URL) -> None:
+        """Initialize the session.
+
+        Args:
+            api_url: Override the API base URL.
+        """
         self._api_url = api_url
         self._session: ClientSession | None = None
 
     def _get_session(self) -> ClientSession:
+        """Return the pooled session, opening one on first use."""
         if self._session is None or self._session.closed:
             connector = TCPConnector(ssl=_build_ssl_context())
             self._session = ClientSession(connector=connector)
@@ -46,6 +55,22 @@ class AiohttpSession(BaseSession):
         secret: str,
         method: PlategaMethod[Any],
     ) -> Any:
+        """Execute an API method and return the parsed response.
+
+        Args:
+            merchant_id: Merchant identifier, sent as ``X-MerchantId``.
+            secret: Secret key, sent as ``X-Secret``.
+            method: The method object describing the request.
+
+        Returns:
+            An instance of the method's ``__returning__`` model.
+
+        Raises:
+            PlategaNetworkError: If the request never reached the server.
+            PlategaAPIError: If the server reported a failure.
+            ClientDecodeError: If the response could not be parsed into the
+                expected model.
+        """
         session = self._get_session()
 
         url, path_fields = self._build_url(method)
@@ -72,8 +97,12 @@ class AiohttpSession(BaseSession):
     def _build_url(self, method: PlategaMethod[Any]) -> tuple[str, frozenset[str]]:
         """Substitute ``{field}`` placeholders into the path.
 
-        Returns the URL together with the field names the path consumed, so the
-        caller can keep them out of the query string or body.
+        Args:
+            method: The method object supplying the field values.
+
+        Returns:
+            The full URL, and the field names the path consumed so the caller
+            can keep them out of the query string or body.
         """
         path = method.__api_method__
         consumed: set[str] = set()
@@ -93,9 +122,18 @@ class AiohttpSession(BaseSession):
     ) -> dict[str, Any]:
         """Serialize a method to JSON-primitive values, minus the path fields.
 
-        ``mode="json"`` matters here: a plain dump leaves ``UUID``/``datetime``
-        objects in place, which yarl silently coerces (a UUID turns into its
-        128-bit integer) and ``json.dumps`` rejects outright.
+        Args:
+            method: The method object to serialize.
+            path_fields: Field names already consumed by the URL path.
+
+        Returns:
+            Alias-keyed values ready for a query string or JSON body.
+
+        Note:
+            Serializing in JSON mode matters. A plain dump leaves ``UUID`` and
+            ``datetime`` objects in place, which yarl silently coerces -- a
+            UUID becomes its 128-bit integer -- and which ``json.dumps``
+            rejects outright.
         """
         return method.model_dump(
             mode="json",
@@ -106,7 +144,15 @@ class AiohttpSession(BaseSession):
 
     @staticmethod
     def _to_query(payload: dict[str, Any]) -> dict[str, str]:
-        """Render a payload as query parameters, which must all be strings."""
+        """Render a payload as query parameters.
+
+        Args:
+            payload: Alias-keyed values from :meth:`_build_payload`.
+
+        Returns:
+            The same mapping with every value rendered as a string, which is
+            what aiohttp accepts.
+        """
         query: dict[str, str] = {}
         for key, value in payload.items():
             if value is None:
@@ -119,6 +165,20 @@ class AiohttpSession(BaseSession):
         response: Any,
         method: PlategaMethod[Any],
     ) -> Any:
+        """Turn a raw response into the method's model, or an exception.
+
+        Args:
+            response: The aiohttp response.
+            method: The method object, read for its return model.
+
+        Returns:
+            An instance of the method's ``__returning__`` model.
+
+        Raises:
+            PlategaAPIError: If the server reported a failure.
+            ClientDecodeError: If the body was not valid JSON, or did not fit
+                the expected model.
+        """
         status = response.status
         api_method = method.__api_method__
 
@@ -145,6 +205,7 @@ class AiohttpSession(BaseSession):
             raise ClientDecodeError(f"Failed to parse response from {api_method}: {exc}") from exc
 
     async def close(self) -> None:
+        """Close the connection pool if this session opened one."""
         if self._session is not None and not self._session.closed:
             await self._session.close()
             self._session = None

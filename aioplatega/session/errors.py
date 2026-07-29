@@ -37,8 +37,13 @@ HTTP_SERVER_ERROR: Final[int] = 500
 def exception_for_status(status: int) -> type[PlategaAPIError]:
     """Pick the exception class for a status code.
 
-    Codes without a dedicated class fall back to :class:`PlategaServerError`
-    for 5xx and the generic :class:`PlategaAPIError` for everything else.
+    Args:
+        status: HTTP status code.
+
+    Returns:
+        The dedicated class where one exists, otherwise
+        :class:`PlategaServerError` for 5xx and :class:`PlategaAPIError` for
+        everything else.
     """
     mapped = STATUS_MAP.get(status)
     if mapped is not None:
@@ -47,7 +52,17 @@ def exception_for_status(status: int) -> type[PlategaAPIError]:
 
 
 def raise_for_status(status: int, body: Any, method: str) -> None:
-    """Raise the matching exception if the status indicates failure."""
+    """Raise the matching exception if the status indicates failure.
+
+    Args:
+        status: HTTP status code.
+        body: Decoded response body, read for a ``message`` field.
+        method: API path, recorded on the exception for context.
+
+    Raises:
+        PlategaAPIError: Or one of its subclasses, for any status of 400 or
+            above. Returns silently otherwise.
+    """
     if status < HTTP_CLIENT_ERROR:
         return
     message = body.get("message", "") if isinstance(body, dict) else str(body)

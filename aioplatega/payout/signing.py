@@ -23,9 +23,16 @@ TIMESTAMP_WINDOW_SECONDS: Final[int] = 300
 def serialize_body(body: dict[str, Any] | None) -> bytes:
     """Serialize a request body to the exact bytes that get signed.
 
-    The separators matter: the signature covers these bytes, so the same
-    buffer has to be written to the socket. Re-encoding the dict at send time
-    could introduce whitespace and invalidate the signature.
+    Args:
+        body: The body to serialize, or ``None`` for a bodiless request.
+
+    Returns:
+        Compact UTF-8 JSON, or empty bytes when there is no body.
+
+    Note:
+        The separators matter. The signature covers these bytes, so the same
+        buffer has to reach the socket; re-encoding the dict at send time
+        could introduce whitespace and invalidate the signature.
     """
     if body is None:
         return b""
@@ -39,10 +46,19 @@ def build_string_to_sign(
     idempotency_key: str,
     body: bytes,
 ) -> str:
-    """Assemble the canonical string: METHOD, PATH, ts, idempotency key, body hash.
+    """Assemble the canonical string that gets signed.
 
-    ``idempotency_key`` is empty for GET requests, which still contributes its
-    (empty) line to the string.
+    Args:
+        method: HTTP verb, upper-cased into the string.
+        path: Request path, without the host or query string.
+        timestamp: Unix time in seconds. The server accepts a window of
+            +/-300 seconds around its own clock.
+        idempotency_key: Reuse-protection key. Empty for reads, which still
+            contribute an empty line to the string.
+        body: The exact bytes of the request body.
+
+    Returns:
+        The five elements joined by newlines.
     """
     return "\n".join(
         [
@@ -56,7 +72,15 @@ def build_string_to_sign(
 
 
 def sign(secret: str, string_to_sign: str) -> str:
-    """Base64 of HMAC-SHA256(secret, string_to_sign)."""
+    """Sign a canonical string.
+
+    Args:
+        secret: The Payout API secret.
+        string_to_sign: Output of :func:`build_string_to_sign`.
+
+    Returns:
+        Base64 of ``HMAC-SHA256(secret, string_to_sign)``.
+    """
     digest = hmac.new(
         secret.encode("utf-8"),
         string_to_sign.encode("utf-8"),
@@ -66,5 +90,14 @@ def sign(secret: str, string_to_sign: str) -> str:
 
 
 def authorization_header(merchant_id: str, timestamp: int, signature: str) -> str:
-    """Render the ``Authorization: PG-HMAC ...`` header value."""
+    """Render the ``Authorization`` header value.
+
+    Args:
+        merchant_id: Merchant identifier, sent as ``kid``.
+        timestamp: The same timestamp that went into the signature.
+        signature: Output of :func:`sign`.
+
+    Returns:
+        A ``PG-HMAC kid=..., ts=..., sig=...`` header value.
+    """
     return f"PG-HMAC kid={merchant_id}, ts={timestamp}, sig={signature}"

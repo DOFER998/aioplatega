@@ -9,6 +9,8 @@ from .payment_details import PaymentDetails
 
 
 class CreateTransactionResponse(PlategaObject):
+    """A created transaction, including the URL to send the payer to."""
+
     payment_method: str | None = Field(None, alias="paymentMethod")
     transaction_id: UUID = Field(alias="transactionId")
     redirect: str | None = None

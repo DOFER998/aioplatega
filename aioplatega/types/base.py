@@ -6,15 +6,14 @@ from pydantic import BaseModel, ConfigDict
 class PlategaObject(BaseModel):
     """Base model for all Platega API objects.
 
-    Immutable (``frozen=True``) and tolerant of unknown fields, so a new
-    attribute added server-side does not break existing callers.
+    Frozen, so assignment to a field is rejected rather than validated, and
+    tolerant of unknown fields, so an attribute added server-side does not
+    break existing callers.
     """
 
     model_config = ConfigDict(
         use_enum_values=True,
         extra="allow",
-        # No validate_assignment: frozen=True rejects assignment outright, so
-        # the validation hook could never run.
         frozen=True,
         populate_by_name=True,
         arbitrary_types_allowed=True,
