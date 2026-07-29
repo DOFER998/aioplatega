@@ -76,6 +76,27 @@ Quick example
    asyncio.run(main())
 
 
+Specification sources
+---------------------
+
+Platega publishes its API in more than one place, and they do not fully agree.
+This library is built against all of them:
+
+- **OpenAPI**, one document per endpoint, linked from
+  `docs.platega.io/llms.txt <https://docs.platega.io/llms.txt>`_. Append
+  ``.md`` to any documentation URL to get the machine-readable spec for that
+  page. This is the authority for paths, fields and schemas.
+- The rendered pages at `docs.platega.io <https://docs.platega.io/>`_, whose
+  prose carries operational rules the schemas omit — the ``metadata.userId``
+  requirement, callback URL restrictions, and the payout signing scheme.
+- An older `GitBook <https://platega-io.gitbook.io/platega.io-api-dokumentaciya>`_
+  that still documents the exchange-rate endpoint and payment method ``10``,
+  neither of which appears in the current reference.
+
+Where the sources disagree, this library accepts the union and types the
+affected fields permissively, so a value one specification omits does not make
+a response unreadable.
+
 .. toctree::
    :hidden:
 

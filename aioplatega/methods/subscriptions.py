@@ -66,9 +66,11 @@ class ListSubscriptions(PlategaMethod[SubscriptionListResponse]):
 class CancelSubscription(PlategaMethod[CancelSubscriptionResponse]):
     """POST ``/subscription/{subscriptionId}/cancel``. Idempotent.
 
-    Sent without a body. The published docs show a create-transaction body on
-    this endpoint, which is the create schema repeated verbatim and reads as a
-    documentation copy-paste rather than a real requirement.
+    Sent without a body, which the OpenAPI specification confirms: the
+    operation declares path and header parameters only. The rendered
+    documentation page shows a create-transaction body because the operation
+    carries ``operationId: createTransaction``, a copy-paste in the vendor's
+    own spec.
     """
 
     __api_method__: ClassVar[str] = "/subscription/{subscription_id}/cancel"
