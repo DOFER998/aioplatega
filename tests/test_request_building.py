@@ -19,10 +19,11 @@ from aioplatega.methods import CreateTransaction, GetConversions, GetRate, GetTr
 from aioplatega.methods.base import PlategaMethod
 from aioplatega.session.aiohttp import AiohttpSession
 from aioplatega.types import PaymentDetails, TransactionStatusResponse
+from tests.factories import MERCHANT_ID, SECRET, SUBSCRIPTION_ID, TRANSACTION_ID
 
-MERCHANT_ID = "test-merchant"
-SECRET = "test-secret"
-TID = "12345678-1234-5678-1234-567812345678"
+TID = TRANSACTION_ID
+SID = SUBSCRIPTION_ID
+MERCHANT = MERCHANT_ID
 
 
 @pytest.fixture

@@ -30,9 +30,11 @@ from aioplatega.types import (
     SubscriptionListResponse,
     TransactionExportResponse,
 )
+from tests.factories import MERCHANT_ID, SUBSCRIPTION_ID, TRANSACTION_ID
 
-TID = "12345678-1234-5678-1234-567812345678"
-SID = "11111111-1111-1111-1111-111111111111"
+TID = TRANSACTION_ID
+SID = SUBSCRIPTION_ID
+MERCHANT = MERCHANT_ID
 
 
 @pytest.fixture

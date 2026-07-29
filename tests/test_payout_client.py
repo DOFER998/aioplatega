@@ -13,9 +13,12 @@ from aiohttp import web
 
 from aioplatega.exceptions import PlategaError, PlategaUnauthorizedError
 from aioplatega.payout import MAX_PAYOUT_RUB, MIN_PAYOUT_RUB, PayoutClient
+from tests.factories import MERCHANT_ID, SECRET, SUBSCRIPTION_ID, TRANSACTION_ID
 
-MERCHANT = "29ef0000-0000-0000-0000-000000000000"
-SECRET = "test-secret"
+TID = TRANSACTION_ID
+SID = SUBSCRIPTION_ID
+MERCHANT = MERCHANT_ID
+
 
 CARDS = [
     {

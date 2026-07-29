@@ -13,8 +13,11 @@ from aioplatega.types import (
     H2HQrResponse,
     TransactionStatusResponse,
 )
+from tests.factories import MERCHANT_ID, SUBSCRIPTION_ID, TRANSACTION_ID
 
-TID = "12345678-1234-5678-1234-567812345678"
+TID = TRANSACTION_ID
+SID = SUBSCRIPTION_ID
+MERCHANT = MERCHANT_ID
 
 
 class TestPaymentStatus:

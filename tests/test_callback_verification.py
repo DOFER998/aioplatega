@@ -14,10 +14,12 @@ from aioplatega import Platega
 from aioplatega.callback import verify_callback
 from aioplatega.exceptions import PlategaError, PlategaValidationError
 from aioplatega.types import CallbackPayload, SubscriptionChargeCallback
+from tests.factories import MERCHANT_ID, SECRET, SUBSCRIPTION_ID, TRANSACTION_ID
 
-MERCHANT = "29ef0000-0000-0000-0000-000000000000"
-SECRET = "test-secret"
-TID = "12345678-1234-5678-1234-567812345678"
+TID = TRANSACTION_ID
+SID = SUBSCRIPTION_ID
+MERCHANT = MERCHANT_ID
+
 
 BODY = {
     "id": TID,

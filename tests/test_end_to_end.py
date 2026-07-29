@@ -17,16 +17,17 @@ from aioplatega import Platega
 from aioplatega.enums import PaymentMethodInt, SubscriptionInterval
 from aioplatega.session.aiohttp import AiohttpSession
 from aioplatega.types import PaymentDetails, PaymentMetadata, SubscriptionPaymentDetails
+from tests.factories import MERCHANT_ID, SUBSCRIPTION_ID, TRANSACTION_ID
+
+TID = TRANSACTION_ID
+SID = SUBSCRIPTION_ID
+MERCHANT = MERCHANT_ID
 
 
 def client_for(url: str) -> tuple[Platega, AiohttpSession]:
     """A client bound to the recording server, plus the session to close."""
     session = AiohttpSession(api_url=url)
     return Platega(merchant_id="m", secret="s", session=session), session
-
-
-TID = "12345678-1234-5678-1234-567812345678"
-SID = "11111111-1111-1111-1111-111111111111"
 
 
 class Echo:

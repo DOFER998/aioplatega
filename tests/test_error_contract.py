@@ -24,10 +24,13 @@ from aioplatega.exceptions import (
 from aioplatega.methods import CreateTransaction
 from aioplatega.session.aiohttp import AiohttpSession
 from aioplatega.types import PaymentDetails
+from tests.factories import MERCHANT_ID, SECRET, SUBSCRIPTION_ID, TRANSACTION_ID
+
+TID = TRANSACTION_ID
+SID = SUBSCRIPTION_ID
+MERCHANT = MERCHANT_ID
 
 API_HOST = "app.platega.io"
-MERCHANT_ID = "test-merchant"
-SECRET = "test-secret"
 
 
 @pytest.fixture
