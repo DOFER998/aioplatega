@@ -98,31 +98,46 @@ from aioplatega.exceptions import (
     PlategaError,
     PlategaBadRequestError,
     PlategaUnauthorizedError,
+    PlategaRateLimitError,
     PlategaNetworkError,
+    PlategaValidationError,
 )
 
 try:
     result = await client.create_transaction(...)
+except PlategaValidationError as e:
+    print(f"Bad arguments, nothing was sent: {e}")
 except PlategaBadRequestError as e:
     print(f"Bad request: {e.message}, status={e.status_code}")
 except PlategaUnauthorizedError:
     print("Invalid credentials")
+except PlategaRateLimitError:
+    print("Rate limited — back off and retry")
 except PlategaNetworkError as e:
     print(f"Network error: {e}")
 except PlategaError as e:
     print(f"Unexpected error: {e}")
 ```
 
+:::{tip}
+Everything this library raises derives from `PlategaError`, so a single
+`except PlategaError` is enough if you do not need to tell the cases apart.
+:::
+
 :::{dropdown} Exception hierarchy
 ```
 PlategaError
 ├── PlategaAPIError
-│   ├── PlategaBadRequestError   (400)
-│   ├── PlategaUnauthorizedError (401)
-│   ├── PlategaForbiddenError    (403)
-│   ├── PlategaNotFoundError     (404)
-│   └── PlategaServerError       (5xx)
+│   ├── PlategaBadRequestError          (400)
+│   ├── PlategaUnauthorizedError        (401)
+│   ├── PlategaForbiddenError           (403)
+│   ├── PlategaNotFoundError            (404)
+│   ├── PlategaConflictError            (409)
+│   ├── PlategaUnprocessableEntityError (422)
+│   ├── PlategaRateLimitError           (429)
+│   └── PlategaServerError              (5xx)
 ├── PlategaNetworkError
+├── PlategaValidationError
 └── ClientDecodeError
 ```
 :::

@@ -46,12 +46,28 @@ class PlategaNotFoundError(PlategaAPIError):
     """HTTP 404 Not Found."""
 
 
+class PlategaConflictError(PlategaAPIError):
+    """HTTP 409 Conflict."""
+
+
+class PlategaUnprocessableEntityError(PlategaAPIError):
+    """HTTP 422 Unprocessable Entity."""
+
+
+class PlategaRateLimitError(PlategaAPIError):
+    """HTTP 429 Too Many Requests."""
+
+
 class PlategaServerError(PlategaAPIError):
     """HTTP 5xx Server Error."""
 
 
 class PlategaNetworkError(PlategaError):
     """Network-level error (connection refused, timeout, DNS failure, etc.)."""
+
+
+class PlategaValidationError(PlategaError):
+    """Invalid arguments — raised before any request is sent."""
 
 
 class ClientDecodeError(PlategaError):

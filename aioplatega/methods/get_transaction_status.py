@@ -20,7 +20,7 @@ class GetTransactionStatus(PlategaMethod[TransactionStatusResponse]):
         def __init__(
             __pydantic__self__,
             *,
-            transaction_id: UUID,
+            transaction_id: str | UUID,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(

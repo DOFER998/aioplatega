@@ -233,3 +233,16 @@ class TestConversionsResponse:
         data = resp.model_dump(by_alias=True)
         assert "totalElements" in data
         assert "totalPages" in data
+
+
+class TestBaseModelConfig:
+    def test_frozen(self):
+        from aioplatega.types import PlategaObject
+
+        assert PlategaObject.model_config["frozen"] is True
+
+    def test_no_dead_validate_assignment(self):
+        """frozen=True already blocks assignment; validate_assignment never fires."""
+        from aioplatega.types import PlategaObject
+
+        assert "validate_assignment" not in PlategaObject.model_config

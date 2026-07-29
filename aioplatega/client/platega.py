@@ -1,6 +1,13 @@
 from __future__ import annotations
 
+from contextlib import contextmanager
+from typing import TYPE_CHECKING
+from uuid import UUID
+
+from pydantic import ValidationError
+
 from aioplatega.enums import PaymentMethodInt
+from aioplatega.exceptions import PlategaValidationError
 from aioplatega.methods import (
     CreateTransaction,
     GetConversions,
@@ -17,6 +24,22 @@ from aioplatega.types import (
     RateResponse,
     TransactionStatusResponse,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
+
+@contextmanager
+def _validated() -> Iterator[None]:
+    """Translate pydantic's ValidationError into the library's own hierarchy.
+
+    Callers of an SDK should be able to catch :class:`PlategaError` and be done;
+    leaking a pydantic type would make them depend on our validation library.
+    """
+    try:
+        yield
+    except ValidationError as exc:
+        raise PlategaValidationError(str(exc)) from exc
 
 
 class Platega:
@@ -84,9 +107,12 @@ class Platega:
 
         Returns:
             Response containing the transaction ID, status, and redirect URL.
+
+        Raises:
+            PlategaValidationError: If the arguments are not a valid request.
         """
-        return await self(
-            CreateTransaction(
+        with _validated():
+            method = CreateTransaction(
                 payment_method=payment_method,
                 payment_details=payment_details,
                 description=description,
@@ -94,49 +120,57 @@ class Platega:
                 failed_url=failed_url,
                 payload=payload,
             )
-        )
+        return await self(method)
 
     async def get_transaction_status(
         self,
-        transaction_id: str,
+        transaction_id: str | UUID,
     ) -> TransactionStatusResponse:
         """Get the current status of a transaction.
 
         Args:
-            transaction_id: UUID of the transaction to query.
+            transaction_id: UUID of the transaction to query, as a
+                :class:`~uuid.UUID` or its string form.
 
         Returns:
             Full transaction details including status and payment info.
+
+        Raises:
+            PlategaValidationError: If ``transaction_id`` is not a valid UUID.
         """
-        return await self(
-            GetTransactionStatus(transaction_id=transaction_id),  # type: ignore[arg-type]
-        )
+        with _validated():
+            method = GetTransactionStatus(transaction_id=transaction_id)
+        return await self(method)
 
     async def get_rate(
         self,
         *,
-        payment_method: int,
+        payment_method: PaymentMethodInt | int,
         currency_from: str,
         currency_to: str,
     ) -> RateResponse:
         """Get the current exchange rate for a payment method.
 
         Args:
-            payment_method: Payment method identifier (int value).
+            payment_method: Payment method identifier, e.g.
+                ``PaymentMethodInt.SBP_QR``.
             currency_from: Source currency code (e.g. ``"USDT"``).
             currency_to: Target currency code (e.g. ``"RUB"``).
 
         Returns:
             Current rate and last update timestamp.
+
+        Raises:
+            PlategaValidationError: If the arguments are not a valid request.
         """
-        return await self(
-            GetRate(
+        with _validated():
+            method = GetRate(
                 merchant_id=self._merchant_id,
                 payment_method=payment_method,
                 currency_from=currency_from,
                 currency_to=currency_to,
             )
-        )
+        return await self(method)
 
     async def get_conversions(
         self,
@@ -156,15 +190,18 @@ class Platega:
 
         Returns:
             Paginated response with conversion items.
+
+        Raises:
+            PlategaValidationError: If the arguments are not a valid request.
         """
-        return await self(
-            GetConversions(
+        with _validated():
+            method = GetConversions(
                 from_date=from_date,
                 to_date=to_date,
                 page=page,
                 size=size,
             )
-        )
+        return await self(method)
 
     async def close(self) -> None:
         """Close the underlying HTTP session and release resources."""

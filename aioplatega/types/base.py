@@ -10,7 +10,8 @@ class PlategaObject(BaseModel):
     model_config = ConfigDict(
         use_enum_values=True,
         extra="allow",
-        validate_assignment=True,
+        # No validate_assignment: frozen=True rejects assignment outright, so
+        # the validation hook could never run.
         frozen=True,
         populate_by_name=True,
         arbitrary_types_allowed=True,

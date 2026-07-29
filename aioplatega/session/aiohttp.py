@@ -1,20 +1,25 @@
 from __future__ import annotations
 
+import asyncio
 import ssl
 from typing import Any, Final
+from urllib.parse import quote
 
 import certifi
-from aiohttp import ClientSession, TCPConnector
+from aiohttp import ClientError, ClientSession, TCPConnector
 
 from aioplatega.exceptions import (
     ClientDecodeError,
     PlategaAPIError,
     PlategaBadRequestError,
+    PlategaConflictError,
     PlategaForbiddenError,
     PlategaNetworkError,
     PlategaNotFoundError,
+    PlategaRateLimitError,
     PlategaServerError,
     PlategaUnauthorizedError,
+    PlategaUnprocessableEntityError,
 )
 from aioplatega.methods.base import PlategaMethod
 
@@ -25,11 +30,22 @@ _STATUS_MAP: Final[dict[int, type[PlategaAPIError]]] = {
     401: PlategaUnauthorizedError,
     403: PlategaForbiddenError,
     404: PlategaNotFoundError,
+    409: PlategaConflictError,
+    422: PlategaUnprocessableEntityError,
+    429: PlategaRateLimitError,
 }
 
 
 _HTTP_CLIENT_ERROR = 400
 _HTTP_SERVER_ERROR = 500
+
+# Failures that genuinely mean the request never made it there and back.
+# Anything else is a bug in this library and must not be disguised as one.
+_NETWORK_ERRORS: Final[tuple[type[BaseException], ...]] = (
+    ClientError,
+    asyncio.TimeoutError,
+    OSError,
+)
 
 
 def _build_ssl_context() -> ssl.SSLContext:
@@ -57,32 +73,71 @@ class AiohttpSession(BaseSession):
     ) -> Any:
         session = self._get_session()
 
-        url = self._build_url(method)
+        url, path_fields = self._build_url(method)
+        payload = self._build_payload(method, path_fields)
         headers = {
             "X-MerchantId": merchant_id,
             "X-Secret": secret,
         }
 
-        data = method.model_dump(by_alias=True, exclude_none=True)
-
         try:
             if method.__http_method__ == "POST":
-                response = await session.post(url, json=data, headers=headers)
+                response = await session.post(url, json=payload, headers=headers)
             else:
-                response = await session.get(url, params=data, headers=headers)
-        except Exception as exc:
+                response = await session.get(
+                    url,
+                    params=self._to_query(payload),
+                    headers=headers,
+                )
+        except _NETWORK_ERRORS as exc:
             raise PlategaNetworkError(str(exc)) from exc
 
         return await self._handle_response(response, method)
 
-    def _build_url(self, method: PlategaMethod[Any]) -> str:
+    def _build_url(self, method: PlategaMethod[Any]) -> tuple[str, frozenset[str]]:
+        """Substitute ``{field}`` placeholders into the path.
+
+        Returns the URL together with the field names the path consumed, so the
+        caller can keep them out of the query string or body.
+        """
         path = method.__api_method__
-        data = method.model_dump(by_alias=False, exclude_none=True)
-        for key, value in data.items():
+        consumed: set[str] = set()
+
+        for key, value in method.model_dump(by_alias=False, exclude_none=True).items():
             placeholder = f"{{{key}}}"
             if placeholder in path:
-                path = path.replace(placeholder, str(value))
-        return f"{self._api_url}{path}"
+                path = path.replace(placeholder, quote(str(value), safe=""))
+                consumed.add(key)
+
+        return f"{self._api_url}{path}", frozenset(consumed)
+
+    @staticmethod
+    def _build_payload(
+        method: PlategaMethod[Any],
+        path_fields: frozenset[str],
+    ) -> dict[str, Any]:
+        """Serialize a method to JSON-primitive values, minus the path fields.
+
+        ``mode="json"`` matters here: a plain dump leaves ``UUID``/``datetime``
+        objects in place, which yarl silently coerces (a UUID turns into its
+        128-bit integer) and ``json.dumps`` rejects outright.
+        """
+        return method.model_dump(
+            mode="json",
+            by_alias=True,
+            exclude_none=True,
+            exclude=set(path_fields),
+        )
+
+    @staticmethod
+    def _to_query(payload: dict[str, Any]) -> dict[str, str]:
+        """Render a payload as query parameters, which must all be strings."""
+        query: dict[str, str] = {}
+        for key, value in payload.items():
+            if value is None:
+                continue
+            query[key] = str(value).lower() if isinstance(value, bool) else str(value)
+        return query
 
     @staticmethod
     async def _handle_response(
