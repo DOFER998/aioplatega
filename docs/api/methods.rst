@@ -1,7 +1,7 @@
 Methods
 =======
 
-Command-pattern objects representing API endpoints (aiogram-style).
+Command-pattern objects representing API endpoints.
 
 PlategaMethod
 -------------

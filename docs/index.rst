@@ -27,7 +27,7 @@ Async Python SDK for the `Platega <https://platega.io>`_ payment API.
    .. grid-item-card:: Command pattern
       :class-card: sd-border-0
 
-      aiogram-style method objects for every API endpoint.
+      Reusable method objects for every API endpoint.
 
    .. grid-item-card:: Error handling
       :class-card: sd-border-0

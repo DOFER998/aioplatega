@@ -156,7 +156,7 @@ print(payload.payment_method)  # int
 
 ## Command pattern
 
-You can also use method objects directly (aiogram-style):
+You can also build and dispatch method objects directly:
 
 ```python
 from aioplatega.methods import CreateTransaction

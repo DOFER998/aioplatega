@@ -36,7 +36,7 @@ Features
 - Fully asynchronous (`asyncio <https://docs.python.org/3/library/asyncio.html>`_)
 - Type-safe with `Pydantic v2 <https://docs.pydantic.dev/latest/>`_ models and full type annotations
 - Supports `mypy <http://mypy-lang.org/>`_ strict mode
-- aiogram-style command pattern for API methods
+- Command-pattern method objects for every API endpoint
 - Typed exception hierarchy for every HTTP status
 - Lazy connection pool with ``aiohttp``
 

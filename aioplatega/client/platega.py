@@ -54,7 +54,7 @@ class Platega:
         return self._session
 
     async def __call__[T](self, method: PlategaMethod[T]) -> T:
-        """Dispatch a method object (aiogram-style command pattern)."""
+        """Dispatch a method object (command pattern)."""
         session = self._get_session()
         return await session.make_request(  # type: ignore[no-any-return]
             merchant_id=self._merchant_id,
