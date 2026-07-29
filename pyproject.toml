@@ -6,6 +6,7 @@ build-backend = "hatchling.build"
 name = "aioplatega"
 description = "Modern and fully asynchronous SDK for the Platega payment API"
 readme = "README.rst"
+version = "0.1.0"
 requires-python = ">=3.12,<3.15"
 license = "MIT"
 authors = [
@@ -40,10 +41,6 @@ dependencies = [
     "certifi>=2024.7.4",
     "pydantic>=2.12.5",
 ]
-dynamic = ["version"]
-
-[tool.hatch.version]
-path = "aioplatega/__meta__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["aioplatega"]
@@ -101,7 +98,6 @@ ignore = [
 known-first-party = ["aioplatega"]
 
 [tool.ruff.lint.per-file-ignores]
-"scripts/**" = ["T20", "PLR2004"]
 "tests/**" = [
     "PLR0124",
     "PLR2004",
@@ -167,7 +163,6 @@ filterwarnings = [
 [tool.coverage.run]
 branch = false
 parallel = true
-omit = ["aioplatega/__meta__.py"]
 
 [tool.coverage.report]
 fail_under = 80

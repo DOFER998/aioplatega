@@ -1,6 +1,6 @@
 name: Release
 
-# One-button release: pick a bump, and this bumps __version__, runs the full
+# One-button release: pick a bump, and this bumps the version, runs the full
 # gate, commits, tags, and hands off to publish.yml.
 #
 # Guarded by the `pypi` environment on the publish side, so the upload still
@@ -53,13 +53,13 @@ jobs:
       # Releasing from a red tree is the one thing this workflow must never
       # do, so the whole gate runs before the version is touched.
       - name: Ruff check
-        run: uv run ruff check aioplatega/ tests/ scripts/
+        run: uv run ruff check aioplatega/ tests/
 
       - name: Ruff format check
-        run: uv run ruff format --check aioplatega/ tests/ scripts/
+        run: uv run ruff format --check aioplatega/ tests/
 
       - name: Mypy
-        run: uv run mypy aioplatega/ tests/ scripts/
+        run: uv run mypy aioplatega/ tests/
 
       - name: Tests
         run: uv run pytest --cov=aioplatega --cov-report=term-missing
@@ -68,8 +68,8 @@ jobs:
         id: bump
         run: |
           set -euo pipefail
-          uv run python scripts/bump_version.py "${{ inputs.part }}"
-          version=$(python3 -c "import re,pathlib; print(re.search(r'\"(.+?)\"', pathlib.Path('aioplatega/__meta__.py').read_text()).group(1))")
+          uv version --bump "${{ inputs.part }}"
+          version=$(uv version --short)
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "tag=v$version" >> "$GITHUB_OUTPUT"
           echo "### Release v$version" >> "$GITHUB_STEP_SUMMARY"
@@ -88,7 +88,8 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add aioplatega/__meta__.py
+          # uv.lock carries the project version too, so both move together.
+          git add pyproject.toml uv.lock
           git commit -m "Release ${{ steps.bump.outputs.version }}"
           git tag -a "${{ steps.bump.outputs.tag }}" -m "Release ${{ steps.bump.outputs.version }}"
           git push origin HEAD:"${GITHUB_REF_NAME}"

@@ -35,10 +35,10 @@ jobs:
         run: uv sync --locked --group dev
 
       - name: Ruff check
-        run: uv run ruff check aioplatega/ tests/ scripts/
+        run: uv run ruff check aioplatega/ tests/
 
       - name: Ruff format check
-        run: uv run ruff format --check aioplatega/ tests/ scripts/
+        run: uv run ruff format --check aioplatega/ tests/
 
   mypy:
     name: Type check
@@ -56,7 +56,7 @@ jobs:
         run: uv sync --locked --group dev --group test
 
       - name: Mypy
-        run: uv run mypy aioplatega/ tests/ scripts/
+        run: uv run mypy aioplatega/ tests/
 
   test:
     name: Test (py${{ matrix.python-version }}, ${{ matrix.os }})

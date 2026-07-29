@@ -1,4 +1,5 @@
-from .__meta__ import __version__
+from importlib.metadata import version
+
 from .client import Platega
 from .enums import (
     CallbackSubscriptionStatus,
@@ -55,6 +56,13 @@ from .types import (
     TransactionExportResponse,
     TransactionStatusResponse,
 )
+
+__version__ = version("aioplatega")
+"""Version of the installed distribution, declared in ``pyproject.toml``.
+
+Read from the installed metadata rather than duplicated in a module, so that
+``uv version --bump`` has a single place to change.
+"""
 
 __all__ = [
     "__version__",

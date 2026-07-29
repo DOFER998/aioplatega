@@ -5,7 +5,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(".."))
 
-from aioplatega.__meta__ import __version__
+from aioplatega import __version__
 
 project = "aioplatega"
 copyright = "2026, c0mrade"
