@@ -1,5 +1,6 @@
 from importlib.metadata import version
 
+from .callback import verify_callback
 from .client import Platega
 from .enums import (
     CallbackSubscriptionStatus,
@@ -116,4 +117,5 @@ __all__ = [
     "TransactionExportRequest",
     "TransactionExportResponse",
     "TransactionStatusResponse",
+    "verify_callback",
 ]

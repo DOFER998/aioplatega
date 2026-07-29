@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 from uuid import UUID
 
 from pydantic import ValidationError
 
+from aioplatega.callback import verify_callback
 from aioplatega.enums import PaymentMethodInt
 from aioplatega.exceptions import PlategaValidationError
 from aioplatega.methods import (
@@ -31,6 +32,7 @@ from aioplatega.session.aiohttp import AiohttpSession
 from aioplatega.session.base import BaseSession
 from aioplatega.types import (
     BalancesResponse,
+    CallbackPayload,
     CancelSubscriptionResponse,
     CancelSupportedResponse,
     CancelTransactionResponse,
@@ -49,7 +51,7 @@ from aioplatega.types import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator
+    from collections.abc import Iterator, Mapping
     from typing import Any
 
 
@@ -581,6 +583,41 @@ class Platega:
         with _validated():
             method = CancelSubscription(subscription_id=subscription_id)
         return await self(method)
+
+    def verify_callback(
+        self,
+        headers: Mapping[str, str],
+        body: str | bytes,
+        *,
+        model: type[Any] = CallbackPayload,
+    ) -> Any:
+        """Authenticate an incoming callback against this client's credentials.
+
+        Platega authenticates callbacks by echoing your own ``X-MerchantId``
+        and ``X-Secret`` back at you; the comparison is done in constant time.
+
+        Args:
+            headers: Request headers, looked up case-insensitively.
+            body: Raw request body.
+            model: Model to parse the body into. Pass
+                :class:`~aioplatega.types.SubscriptionChargeCallback` or
+                :class:`~aioplatega.types.SubscriptionStatusCallback` for the
+                subscription callbacks.
+
+        Returns:
+            The parsed callback body, an instance of ``model``.
+
+        Raises:
+            PlategaValidationError: If the credentials do not match or the body
+                cannot be parsed.
+        """
+        return verify_callback(
+            headers,
+            body,
+            merchant_id=self._merchant_id,
+            secret=self._secret,
+            model=model,
+        )
 
     async def close(self) -> None:
         """Close the underlying HTTP session and release resources."""

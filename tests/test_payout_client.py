@@ -339,3 +339,16 @@ class TestPayoutTransportEdges:
         ):
             await client.get_cards()
         assert server.requests[0]["path"] == "/api/v1/cards"
+
+
+class TestPayoutStandardHeaders:
+    async def test_accept_and_user_agent_are_sent(self):
+        async with (
+            Recorder(CARDS) as server,
+            PayoutClient(MERCHANT, SECRET, api_url=server.url) as client,
+        ):
+            await client.get_cards()
+
+        (req,) = server.requests
+        assert req["headers"]["Accept"] == "application/json"
+        assert req["headers"]["User-Agent"].startswith("aioplatega/")

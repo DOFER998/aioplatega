@@ -237,3 +237,38 @@ class TestRequestOnTheWire:
             "paymentMethod": 2,
             "paymentDetails": {"amount": 100.0, "currency": "RUB"},
         }
+
+
+class TestStandardHeaders:
+    """The vendor SDK sends Accept and User-Agent; several endpoints list
+    ``accept`` as a required header, and a User-Agent lets Platega attribute
+    traffic when a merchant asks them to debug an integration."""
+
+    async def test_accept_and_user_agent_are_sent(self, session, recording):
+        async with recording({"id": TID, "status": "CONFIRMED"}) as server:
+            session._api_url = server.url
+            await session.make_request(
+                MERCHANT_ID, SECRET, GetTransactionStatus(transaction_id=UUID(TID))
+            )
+            await session.close()
+
+        (req,) = server.requests
+        assert req["headers"]["Accept"] == "application/json"
+        assert req["headers"]["User-Agent"].startswith("aioplatega/")
+
+    async def test_headers_are_sent_on_post_too(self, session, recording):
+        async with recording({"transactionId": TID, "status": "PENDING"}) as server:
+            session._api_url = server.url
+            await session.make_request(
+                MERCHANT_ID,
+                SECRET,
+                CreateTransaction(
+                    payment_method=PaymentMethodInt.SBP_QR,
+                    payment_details=PaymentDetails(amount=100.0, currency="RUB"),
+                ),
+            )
+            await session.close()
+
+        (req,) = server.requests
+        assert req["headers"]["Accept"] == "application/json"
+        assert req["headers"]["User-Agent"].startswith("aioplatega/")

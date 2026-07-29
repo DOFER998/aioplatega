@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import ssl
+from importlib.metadata import version
 from typing import Any, Final
 from urllib.parse import quote
 
@@ -13,6 +14,9 @@ from aioplatega.methods.base import PlategaMethod
 
 from .base import API_URL, BaseSession
 from .errors import HTTP_CLIENT_ERROR, raise_for_status
+
+USER_AGENT: Final[str] = f"aioplatega/{version('aioplatega')}"
+"""Identifies the library to Platega when they are asked to debug traffic."""
 
 _NETWORK_ERRORS: Final[tuple[type[BaseException], ...]] = (
     ClientError,
@@ -78,6 +82,8 @@ class AiohttpSession(BaseSession):
         headers = {
             "X-MerchantId": merchant_id,
             "X-Secret": secret,
+            "Accept": "application/json",
+            "User-Agent": USER_AGENT,
         }
 
         try:

@@ -174,7 +174,51 @@ PlategaError
 
 ## Callback payload
 
-When Platega sends a webhook to your server, parse the JSON body:
+Platega authenticates a callback by echoing your own `X-MerchantId` and
+`X-Secret` back at you — there is no signature over the body. Verify them
+before trusting anything:
+
+```python
+from aioplatega.exceptions import PlategaValidationError
+
+@app.route("/callback", methods=["POST"])
+def callback():
+    try:
+        payload = client.verify_callback(request.headers, request.get_data())
+    except PlategaValidationError:
+        return "", 401
+
+    if payload.status == PaymentStatus.CONFIRMED:
+        mark_paid(payload.payload)
+    return "", 200
+```
+
+:::{warning}
+Compare the credentials in constant time. A plain `==` against your secret
+leaks it byte by byte to anyone who can measure the response. `verify_callback`
+uses `hmac.compare_digest`; if you roll your own check, do the same.
+:::
+
+`verify_callback` is framework-agnostic — pass whatever header mapping and raw
+body your framework exposes. It is also available as a standalone function for
+code that has no client at hand:
+
+```python
+from aioplatega import verify_callback
+
+payload = verify_callback(headers, body, merchant_id="...", secret="...")
+```
+
+For the subscription callbacks, whose fields are PascalCase, pass the matching
+model:
+
+```python
+from aioplatega import SubscriptionChargeCallback
+
+charge = client.verify_callback(headers, body, model=SubscriptionChargeCallback)
+```
+
+If you only need to parse a body you have already authenticated:
 
 ```python
 from aioplatega import CallbackPayload

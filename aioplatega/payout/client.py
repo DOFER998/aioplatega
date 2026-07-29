@@ -20,6 +20,7 @@ import certifi
 from aiohttp import ClientError, ClientSession, TCPConnector
 
 from aioplatega.exceptions import ClientDecodeError, PlategaAPIError, PlategaNetworkError
+from aioplatega.session.aiohttp import USER_AGENT
 from aioplatega.session.base import API_URL
 from aioplatega.session.errors import HTTP_CLIENT_ERROR, raise_for_status
 from aioplatega.types import CardPayoutRequest, CardPayoutResponse, SavedCardsResponse
@@ -123,6 +124,8 @@ class PayoutClient:
         )
         headers = {
             "Authorization": authorization_header(self._merchant_id, timestamp, signature),
+            "Accept": "application/json",
+            "User-Agent": USER_AGENT,
         }
         if idempotency_key:
             headers["Idempotency-Key"] = idempotency_key
