@@ -113,7 +113,7 @@ class Platega:
     async def create_transaction(
         self,
         *,
-        payment_method: PaymentMethodInt,
+        payment_method: PaymentMethodInt | int,
         payment_details: PaymentDetails,
         description: str | None = None,
         return_url: str | None = None,
@@ -123,7 +123,9 @@ class Platega:
         """Create a new payment transaction.
 
         Args:
-            payment_method: Payment method identifier (e.g. ``PaymentMethodInt.SBP_QR``).
+            payment_method: Payment method identifier, e.g.
+                ``PaymentMethodInt.SBP_QR``. Any integer the merchant is
+                enabled for is accepted, including ids the enum does not name.
             payment_details: Amount and currency for the payment.
             description: Optional human-readable description.
             return_url: URL to redirect the user after successful payment.

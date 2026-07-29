@@ -89,3 +89,52 @@ class TestH2HResponse:
         assert parsed.account_name == "Jhon M"
         assert parsed.method == "tinkoff"
         assert parsed.amount == 2000
+
+
+class TestPaymentMethodIsNotAClosedSet:
+    """The enum names the documented methods; it is not the list of valid ones.
+
+    The GitBook states that methods 1 through 9 are P2P, and a merchant is
+    enabled for whichever ones their contract covers. Rejecting an id merely
+    because it is unnamed here would lock those merchants out entirely.
+    """
+
+    @pytest.mark.parametrize("method", [1, 4, 5, 6, 7, 8, 9, 99])
+    def test_unnamed_method_id_is_accepted(self, method):
+        from aioplatega.methods import CreateTransaction
+        from aioplatega.types import PaymentDetails
+
+        built = CreateTransaction(
+            payment_method=method,
+            payment_details=PaymentDetails(amount=1000.0, currency="RUB"),
+        )
+        assert built.model_dump(by_alias=True)["paymentMethod"] == method
+
+    def test_named_member_still_serializes_to_its_value(self):
+        from aioplatega.methods import CreateTransaction
+        from aioplatega.types import PaymentDetails
+
+        built = CreateTransaction(
+            payment_method=PaymentMethodInt.SBP_QR,
+            payment_details=PaymentDetails(amount=1000.0, currency="RUB"),
+        )
+        assert built.model_dump(by_alias=True)["paymentMethod"] == 2
+
+    async def test_client_accepts_a_bare_int(self, client, mock_session):
+        from aioplatega.types import PaymentDetails
+
+        await client.create_transaction(
+            payment_method=5,
+            payment_details=PaymentDetails(amount=1000.0, currency="RUB"),
+        )
+        (_, _, method) = mock_session.calls[0]
+        assert method.payment_method == 5
+
+    def test_request_type_matches_the_method(self):
+        from aioplatega.types import CreateTransactionRequest, PaymentDetails
+
+        built = CreateTransactionRequest(
+            payment_method=7,
+            payment_details=PaymentDetails(amount=1000.0, currency="RUB"),
+        )
+        assert built.payment_method == 7

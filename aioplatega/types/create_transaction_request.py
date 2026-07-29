@@ -12,9 +12,15 @@ class CreateTransactionRequest(PlategaObject):
 
     Note:
         Do not supply an ``id``. The API generates the transaction id.
+
+        ``payment_method`` accepts any integer, not only a
+        :class:`~aioplatega.enums.PaymentMethodInt` member. The enum names the
+        documented methods, but the GitBook records that ids 1 through 9 are
+        P2P and a merchant is enabled for whichever their contract covers, so
+        a closed set would lock those merchants out.
     """
 
-    payment_method: PaymentMethodInt = Field(alias="paymentMethod")
+    payment_method: PaymentMethodInt | int = Field(alias="paymentMethod")
     payment_details: PaymentDetails = Field(alias="paymentDetails")
     description: str | None = None
     return_url: str | None = Field(None, alias="return")
@@ -27,7 +33,7 @@ class CreateTransactionRequest(PlategaObject):
         def __init__(
             __pydantic__self__,
             *,
-            payment_method: PaymentMethodInt,
+            payment_method: PaymentMethodInt | int,
             payment_details: PaymentDetails,
             description: str | None = None,
             return_url: str | None = None,
