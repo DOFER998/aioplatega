@@ -2,8 +2,15 @@ name: Release
 
 # release-please keeps a Release PR open against main, accumulating the
 # conventional-commit messages since the last tag. Merging that PR is the
-# release: it bumps the version in pyproject.toml, writes CHANGELOG.md, tags,
-# and creates the GitHub release. Only then does anything reach PyPI.
+# release: it bumps the version, writes CHANGELOG.md, tags, and creates the
+# GitHub release. Only then does anything reach PyPI.
+#
+# The publish steps are inlined rather than delegated to pypi-release.yml,
+# because PyPI states plainly that "reusable workflows cannot currently be
+# used as the workflow in a Trusted Publisher". Called that way the OIDC
+# token authenticates on job_workflow_ref (the callee) while the attestation
+# certificate records workflow_ref (the caller), and the two cannot both
+# match one publisher.
 on:
   push:
     branches: [main]
@@ -32,18 +39,90 @@ jobs:
           config-file: .github/release-please-config.json
           manifest-file: .github/.release-please-manifest.json
 
-  # PyPI matches its trusted publisher against the workflow that *entered*
-  # the run, not the one that does the upload. Because pypi-release.yml is
-  # called from here, the OIDC claim reads release-please.yml, so that is the
-  # filename the trusted publisher on PyPI has to name. A publisher for
-  # pypi-release.yml alone covers only a tag pushed by hand.
-  publish:
-    name: Publish
+  build:
+    name: Build distribution
     needs: release-please
     if: needs.release-please.outputs.released == 'true'
-    uses: ./.github/workflows/pypi-release.yml
-    with:
-      tag: ${{ needs.release-please.outputs.tag }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.release-please.outputs.tag }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v9.0.0
+        with:
+          enable-cache: true
+          python-version: "3.12"
+
+      # Catches a tag moved or cut from the wrong commit. Publishing a
+      # mislabelled version to PyPI cannot be undone.
+      - name: Verify the tag matches the packaged version
+        run: |
+          set -euo pipefail
+          packaged=$(uv version --short)
+          expected="${TAG#v}"
+          if [ "$packaged" != "$expected" ]; then
+            echo "::error::tag $TAG does not match the packaged version $packaged"
+            exit 1
+          fi
+        env:
+          TAG: ${{ needs.release-please.outputs.tag }}
+
+      - name: Build
+        run: uv build
+
+      # A broken sdist or a README PyPI refuses to render otherwise surfaces
+      # only at upload time, once the tag already exists.
+      - name: Check metadata
+        run: uvx twine check --strict dist/*
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    name: Publish to PyPI
+    needs: [release-please, build]
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/aioplatega
+    permissions:
+      # Trusted publishing: PyPI verifies this workflow's OIDC identity, so
+      # there is no long-lived API token to store or rotate. The publisher
+      # registered on PyPI must name this file.
+      id-token: write
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+  attach-artifacts:
+    name: Attach distributions to the release
+    needs: [release-please, publish]
+    runs-on: ubuntu-latest
     permissions:
       contents: write
-      id-token: write
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+
+      # release-please writes the release notes from the commit messages;
+      # this only adds the built files. generate_release_notes would replace
+      # that changelog with GitHub's own list of merged PRs.
+      - name: Attach files
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ needs.release-please.outputs.tag }}
+          files: dist/*
