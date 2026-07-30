@@ -5,6 +5,10 @@ updates:
   # existed; keeping actions on the update schedule is the point.
   - package-ecosystem: github-actions
     directory: /
+    # Work reaches main only through dev, so updates have to start there too.
+    # Left to the default, dependabot targets the default branch and its
+    # changes never reach dev, which then drifts.
+    target-branch: dev
     schedule:
       interval: weekly
     labels: [dependencies, ci]
@@ -16,6 +20,7 @@ updates:
 
   - package-ecosystem: uv
     directory: /
+    target-branch: dev
     schedule:
       interval: weekly
     labels: [dependencies]
