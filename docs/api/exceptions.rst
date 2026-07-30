@@ -24,7 +24,7 @@ Every failure raised by this library derives from ``PlategaError``, so a single
 the arguments cannot form a valid request. Any other 4xx status that has no
 dedicated class arrives as the generic ``PlategaAPIError``.
 
-.. automodule:: aioplatega.exceptions.base
+.. automodule:: aioplatega.exceptions
    :members:
    :undoc-members:
    :show-inheritance:

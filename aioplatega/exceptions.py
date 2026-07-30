@@ -1,3 +1,9 @@
+"""Every failure this library raises.
+
+The whole hierarchy lives in one module because it is read as one: a caller
+deciding what to catch wants to see the tree, not follow it across files.
+"""
+
 from __future__ import annotations
 
 from typing import Any
@@ -103,3 +109,20 @@ class PlategaValidationError(PlategaError):
 
 class ClientDecodeError(PlategaError):
     """Failed to decode/parse the API response."""
+
+
+__all__ = [
+    "ClientDecodeError",
+    "PlategaAPIError",
+    "PlategaBadRequestError",
+    "PlategaConflictError",
+    "PlategaError",
+    "PlategaForbiddenError",
+    "PlategaNetworkError",
+    "PlategaNotFoundError",
+    "PlategaRateLimitError",
+    "PlategaServerError",
+    "PlategaUnauthorizedError",
+    "PlategaUnprocessableEntityError",
+    "PlategaValidationError",
+]
