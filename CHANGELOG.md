@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/DOFER998/aioplatega/compare/v0.2.2...v0.2.3) (2026-07-30)
+
+
+### Refactoring
+
+* collapse the exceptions package into one module ([0466994](https://github.com/DOFER998/aioplatega/commit/046699409faf50670db7b6eab4448aba62c5a830))
+
 ## [0.2.2](https://github.com/DOFER998/aioplatega/compare/v0.2.1...v0.2.2) (2026-07-29)
 
 
