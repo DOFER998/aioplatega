@@ -23,7 +23,16 @@ MERCHANT = MERCHANT_ID
 class TestPaymentStatus:
     @pytest.mark.parametrize(
         "value",
-        ["PENDING", "CONFIRMED", "CANCELED", "CHARGEBACKED", "EXPIRED", "FAILED"],
+        [
+            "PENDING",
+            "CONFIRMED",
+            "CANCELED",
+            "CHARGEBACKED",
+            "EXPIRED",
+            "FAILED",
+            "DISPUTED",
+            "PARTIALLY_REFUNDED",
+        ],
     )
     def test_documented_value_is_a_member(self, value):
         assert PaymentStatus(value).value == value
@@ -144,9 +153,11 @@ class TestPaymentMethodIsNotAClosedSet:
 
 
 class TestCallbackStatusIsOpen:
-    """The callback schema names two statuses; the same page's prose adds a third."""
+    """The callback schema names five statuses; the SDK must parse all of them."""
 
-    @pytest.mark.parametrize("status", ["CONFIRMED", "CANCELED", "CHARGEBACKED"])
+    @pytest.mark.parametrize(
+        "status", ["CONFIRMED", "CANCELED", "CHARGEBACKED", "DISPUTED", "PARTIALLY_REFUNDED"]
+    )
     def test_documented_callback_statuses_parse(self, status):
         from aioplatega.types import CallbackPayload
 

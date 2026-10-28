@@ -61,6 +61,8 @@ def callback():
     except PlategaValidationError:
         return "", 401
 
+    # A dispute resolved in your favour sends a second CONFIRMED for the
+    # same payment: keep mark_paid idempotent.
     if payload.status == PaymentStatus.CONFIRMED:
         mark_paid(payload.payload)
     return "", 200
