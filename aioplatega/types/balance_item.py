@@ -9,6 +9,7 @@ class BalanceItem(PlategaObject):
     amount: float | None = None
     currency: str | None = None
     frozen_balance: float | None = Field(None, alias="frozenBalance")
+    dispute_frozen_balance: float | None = Field(None, alias="disputeFrozenBalance")
 
 
 class BalancesResponse(SequenceResponse, RootModel[list[BalanceItem]]):

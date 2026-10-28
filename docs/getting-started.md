@@ -78,9 +78,19 @@ merchant is enabled for whichever their contract covers.
 ```python
 result = await client.get_transaction_status("transaction-uuid")
 
-print(result.status)           # "PENDING" | "CONFIRMED" | "CANCELED" | "CHARGEBACKED"
+print(result.status)           # "PENDING" | "CONFIRMED" | "CANCELED" | "CHARGEBACKED" | "DISPUTED"
 print(result.payment_details)  # PaymentDetails or None
 ```
+
+A `DISPUTED` payment is under review: the money is reserved, refunds are
+blocked, and the status resolves to either `CONFIRMED` (the merchant wins, and
+a second `CONFIRMED` callback follows) or `CHARGEBACKED` (the payer is
+refunded). While the review lasts, `get_balances()` reports the reserved amount
+in `dispute_frozen_balance` on the USDT balance.
+
+Because a dispute can resolve back to `CONFIRMED`, a second `CONFIRMED` for the
+same transaction does not mean a second payment. Make the callback handler
+idempotent on the transaction `id`.
 
 ---
 
@@ -240,7 +250,7 @@ from aioplatega import CallbackPayload
 payload = CallbackPayload.model_validate(request_json)
 
 print(payload.id)              # transaction UUID
-print(payload.status)          # "CONFIRMED" | "CANCELED" | "CHARGEBACKED"
+print(payload.status)          # "CONFIRMED" | "CANCELED" | "CHARGEBACKED" | "DISPUTED"
 print(payload.amount)          # float
 print(payload.payment_method)  # int
 ```
@@ -261,10 +271,10 @@ Rules for the URL itself:
 :::
 
 :::{note}
-The published schema lists only `CONFIRMED` and `CANCELED` for the callback
-status, while the same page's prose adds `CHARGEBACKED` for refunds.
-`CallbackPayload.status` is therefore a plain string, so any of the three —
-or a future fourth — parses.
+The callback schema names five statuses: `CONFIRMED`, `CANCELED`,
+`CHARGEBACKED`, `PARTIALLY_REFUNDED` and `DISPUTED`. `CallbackPayload.status`
+is a plain string rather than a `PaymentStatus`, so a value from a newer schema
+still parses instead of failing the whole callback.
 :::
 
 Subscriptions send two further callbacks, with PascalCase field names:
@@ -362,7 +372,8 @@ else:
 
 ```python
 for balance in await client.get_balances():
-    print(balance.currency, balance.amount, balance.frozen_balance)
+    print(balance.currency, balance.amount, balance.frozen_balance,
+          balance.dispute_frozen_balance)
 
 link = await client.export_transactions_csv(
     statuses=["CONFIRMED"],

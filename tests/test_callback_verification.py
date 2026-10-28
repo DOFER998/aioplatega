@@ -57,10 +57,12 @@ class TestAccepted:
         headers = {"X-Merchant-Id": MERCHANT, "X-Secret": SECRET}
         assert verify_callback(headers, raw(), merchant_id=MERCHANT, secret=SECRET)
 
-    def test_chargebacked_is_accepted(self):
-        body = {**BODY, "status": "CHARGEBACKED"}
-        parsed = verify_callback(HEADERS, raw(body), merchant_id=MERCHANT, secret=SECRET)
-        assert parsed.status == "CHARGEBACKED"
+    def test_chargebacked_and_disputed_are_accepted(self):
+        """A dispute is a routine callback now, not an unknown status."""
+        for status in ("CHARGEBACKED", "DISPUTED"):
+            body = {**BODY, "status": status}
+            parsed = verify_callback(HEADERS, raw(body), merchant_id=MERCHANT, secret=SECRET)
+            assert parsed.status == status
 
     def test_subscription_callback_model_can_be_supplied(self):
         body = {

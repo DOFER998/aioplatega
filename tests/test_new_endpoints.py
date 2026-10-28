@@ -202,6 +202,14 @@ class TestBareArrayResponses:
     def test_frozen_balance_alias_is_wired(self):
         assert BalancesResponse.model_validate([{"frozenBalance": 1.0}])[0].frozen_balance == 1.0
 
+    def test_dispute_frozen_balance_alias_is_wired(self):
+        parsed = BalancesResponse.model_validate([{"disputeFrozenBalance": 2.0}])
+        assert parsed[0].dispute_frozen_balance == 2.0
+
+    def test_absent_dispute_frozen_balance_stays_none(self):
+        balances = BalancesResponse.model_validate([{"currency": "RUB"}])
+        assert balances[0].dispute_frozen_balance is None
+
 
 class TestCancellation:
     def test_cancel_supported_parses_the_documented_example(self):
